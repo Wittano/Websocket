@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Forget password</title>
+</head>
+<body>
+    <header>
+        <h1>Forget password</h1>
+        <nav>
+            <a href="/">Home page</a>
+        </nav>
+    </header>
+    <main>
+        <form action="/forget" method="post">
+            <input type="email" name="email" th:field="${email}" placeholder="email">
+            <button>Restart password</button>
+        </form>
+    </main>
+</body>
+</html>

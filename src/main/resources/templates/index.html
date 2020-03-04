@@ -5,6 +5,21 @@
     <title>Home</title>
 </head>
 <body>
-    <p th:text="'Hello World!'"></p>
+    <header>
+        <h1>Webscoket</h1>
+        <nav>
+            <a href="/register">Register</a>
+        </nav>
+    </header>
+    <main>
+        <form action="/login" th:object="${user}" method="post">
+            <input type="text" th:field="*{name}" placeholder="Nickname" name="name">
+            <input type="password" th:field="*{password}" placeholder="Password" name="password">
+            <nav>
+                <a href="/forget">Forget password?</a>
+            </nav>
+            <button>Login</button>
+        </form>
+    </main>
 </body>
 </html>
