@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <header>
@@ -15,12 +16,12 @@
         <form action="/register" method="post" th:object="${user}">
             <div>
                 <input type="text" placeholder="Nickname" name="name" th:field="*{name}" required>
-                <span id="name-error">Name error</span>
+                <span id="name-error"></span>
                 <input type="password" placeholder="Password" th:field="*{password}" required>
-                <span id="password-error">Password error</span>
+                <span id="password-error"></span>
                 <input type="password" placeholder="Repeat Password" required>
                 <input type="email" placeholder="Email" th:field="*{email}" required>
-                <span id="email-error">Email error</span>
+                <span id="email-error"></span>
                 <input type="email" placeholder="Repeat Email" required>
             </div>
             <div>
@@ -40,5 +41,8 @@
             <button id="register-button">Register</button>
         </form>
     </main>
+    <footer>
+        <script src="js/lib/validation.js"></script>
+    </footer>
 </body>
 </html>
