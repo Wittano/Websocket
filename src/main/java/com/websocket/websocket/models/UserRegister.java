@@ -1,5 +1,9 @@
 package com.websocket.websocket.models;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class UserRegister {
@@ -8,8 +12,14 @@ public class UserRegister {
        Male, Female
     }
 
+    @NotNull
+    @Size(min = 4, max = 50)
     private String name;
+    @NotNull
+    @Min(4)
     private String password;
+    @NotNull
+    @Email
     private String email;
     private Date birthday;
     private Gender gender;
