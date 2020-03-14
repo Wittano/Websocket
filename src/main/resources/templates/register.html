@@ -16,13 +16,15 @@
         <form action="/register" method="post" th:object="${user}">
             <div>
                 <input type="text" placeholder="Nickname" name="name" th:field="*{name}" required>
-                <span id="name-error"></span>
+                <span class="error-msg" id="name-error"></span>
                 <input type="password" placeholder="Password" th:field="*{password}" required>
-                <span id="password-error"></span>
-                <input type="password" placeholder="Repeat Password" required>
+                <span class="error-msg" id="password-error"></span>
+                <input type="password" id="repeat-password" placeholder="Repeat Password" required>
+                <span class="error-msg" id="password-repeat-error"></span>
                 <input type="email" placeholder="Email" th:field="*{email}" required>
-                <span id="email-error"></span>
-                <input type="email" placeholder="Repeat Email" required>
+                <span class="error-msg" id="email-error"></span>
+                <input type="email" placeholder="Repeat Email" id="repeat-email" required>
+                <span class="error-msg" id="email-repeat-error"></span>
             </div>
             <div>
                 <label for="date">Your birthday</label>

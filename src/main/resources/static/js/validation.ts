@@ -4,8 +4,12 @@ let passwordError: Element | null = document.querySelector("#password-error");
 let emailError: Element | null = document.querySelector("#email-error");
 let nameInput: HTMLInputElement | null = document.querySelector("#name");
 let passwordInput: HTMLInputElement | null = document.querySelector("#password");
+let passwordRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-password");
+let passwordRepeatError: HTMLSpanElement | null = document.querySelector("#password-repeat-error");
 let emailInput: HTMLInputElement | null = document.querySelector("#email");
-let registerButton: Element | null = document.querySelector('#register-button');
+let emailRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-email");
+let emailRepeatError: HTMLSpanElement | null = document.querySelector("#email-repeat-error");
+let registerButton: HTMLButtonElement | null = document.querySelector('#register-button');
 //#endregion
 
 class ErrorMessage {
@@ -58,10 +62,10 @@ class FormValidation {
         this.email = email;
     }
 
-    private ValidName(username: string): boolean {
+    public ValidName(username: string): boolean {
         let regex: RegExp = new RegExp('[A-Za-z0-9]{4,}');
 
-        if(regex.test(username){
+        if(regex.test(username)){
             return true;
         }
         else if(username.length < 4)
@@ -72,13 +76,13 @@ class FormValidation {
         return false;
     }
 
-    private ValidPassword(passwd: string): boolean{
+    public ValidPassword(passwd: string): boolean{
         let regex: RegExp = new RegExp('[A-Za-z0-9!#$&*:;.,]{4,30}');
 
         return regex.test(passwd);
     }
 
-    private ValidEmail(email: string): boolean{
+    public ValidEmail(email: string): boolean{
         let regex: RegExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
         return regex.test(email.toLowerCase());
@@ -117,11 +121,35 @@ document.addEventListener("DOMContentLoaded", () => {
         if(form.Valid() && nameInput?.value.length != 0 && nameError != null){
             nameError.innerHTML = "";
             enableRegisterButton();
-        } else if(nameInput?.value.length === 0 && nameError != null){
-            nameError.innerHTML = "";
+        } else if(nameInput?.value.length === 0 || form.ValidName(String(nameInput?.value))){
+            if(nameError != null)
+                nameError.innerHTML = "";
         } else{
             disableRegisterButton();
             setErrorMessage(InputType.Name, "Nieporawna nazwa użytkownika");
+        }
+    });
+
+    passwordInput?.addEventListener("input", () => {
+        form.SetPassword(String(passwordInput?.value));
+        if(form.Valid() && passwordInput?.value.length != 0 && passwordError != null){
+           passwordError.innerHTML = "";
+           enableRegisterButton();
+        } else if(passwordInput?.value.length == 0 || form.ValidPassword(String(passwordInput?.value))){
+            if(passwordError != null)
+                passwordError.innerHTML = "";
+        } else {
+            disableRegisterButton();
+            setErrorMessage(InputType.Password, "Niepoprawne hasło");
+        }
+    });
+    passwordRepeatInput?.addEventListener("focusout", (e) => {
+        if(passwordRepeatError != null){
+            if((passwordInput != null && passwordRepeatInput != null) && !sameValue(passwordInput, passwordRepeatInput)){
+                passwordRepeatError.innerHTML = "Hasła nie są takie same!";
+            } else {
+                passwordRepeatError.innerHTML = "";
+            }
         }
     });
 
@@ -131,25 +159,22 @@ document.addEventListener("DOMContentLoaded", () => {
             emailError.innerHTML = "";
             enableRegisterButton();
         }
-        else if(emailInput?.value.length == 0 && emailError != null){
-           emailError.innerHTML = "";
+        else if(emailInput?.value.length == 0 || form.ValidEmail(String(emailInput?.value))){
+            if(emailError != null)
+                emailError.innerHTML = "";
         }
         else{
             disableRegisterButton();
             setErrorMessage(InputType.Email, "Nieporawny email");
         }
     });
-
-    passwordError?.addEventListener("input", () => {
-        form.SetPassword(passwordInput?.value == undefined ? "" : passwordInput.value);
-        if(form.Valid() && passwordInput?.value.length != 0 && passwordError != null){
-           passwordError.innerHTML = "";
-           enableRegisterButton();
-        } else if(passwordInput?.value.length == 0 && passwordError != null){
-            passwordError.innerHTML = "";
-        } else {
-            disableRegisterButton();
-            setErrorMessage(InputType.Email, "Nieporawny hasło");
+    emailRepeatInput?.addEventListener("focusout", (e) => {
+        if(emailRepeatError != null){
+            if((emailInput != null && emailRepeatInput != null) && !sameValue(emailInput, emailRepeatInput)){
+                emailRepeatError.innerHTML = "Maile nie są takie same!";
+            } else {
+                emailRepeatError.innerHTML = "";
+            }
         }
     });
 });
@@ -176,10 +201,14 @@ function setErrorMessage(type: InputType, msg: string){
 
 function enableRegisterButton(){
     if(registerButton !== null)
-        registerButton.className = 'register-button-enable';
+        registerButton.disabled = true;
 }
 
 function disableRegisterButton(){
     if(registerButton !== null)
-        registerButton.className = 'register-button-disable';
+        registerButton.disabled = false;
+}
+
+function sameValue(origin: HTMLInputElement, repeat: HTMLInputElement): boolean {
+    return origin.value == repeat.value;
 }
