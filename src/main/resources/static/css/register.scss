@@ -1,8 +1,121 @@
-$body-background:white;
-$header-background: #ff9135;
+$body-background:  	#f4a261;
+$header-background: #e76f51;
+$header-font-color: #E7EAE9;
+$header-font: 'Ubuntu', sans-serif;
+$form-margin: 10px;
+$input-font-size: 22px;
+$input-font: 'Hind Siliguri', sans-serif;
+$input-border-radius: 50px;
+$register-button-background-disable: #264653;
+$register-button-background-enable: #2a9d8f;
+
+html{
+    overflow-y: hidden;
+}
 
 body{
     background: $body-background;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: $header-background;
+    color: $header-font-color;
+    padding: 10px 10px -5px;
+    margin: 0;
+    font-family: $header-font;
+}
+
+#header-content{
+    text-align: center;
+}
+
+.title{
+    font-size: 40pt;
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    padding-top: 7px;
+}
+
+.menu{
+    text-align: left;
+    font-size: 34px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+main{
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+}
+
+#form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 22%;
+}
+
+#main-info{
+    display: flex;
+    flex-direction: column;
+    margin-top: $form-margin;
+    margin-bottom: $form-margin;
+}
+
+#date-div{
+    margin-top: $form-margin;
+}
+
+#gender-choose{
+    margin-top: $form-margin;
+    margin-bottom: $form-margin * 2;
+}
+
+.text-input{
+    border: #E7EAE9 solid 1px;
+    border-radius: $input-border-radius;
+    margin-top: 10px;
+    font-size: $input-font-size;
+    padding: 15px;
+    font-family: $input-font;
+}
+
+#date{
+  font-size: 18px;
+}
+
+#register-button{
+   font-size: $input-font-size + 8;
+   border-radius: $input-border-radius;
+    border: none;
+    padding: 20px;
+    transition-duration: 700ms;
+}
+
+#register-button:disabled{
+    background: $register-button-background-disable;
+    color: #597986;
+}
+
+#register-button:disabled:hover{
+    background: $register-button-background-disable;
+    color: #597986;
+}
+
+#register-button:enabled{
+    background: $register-button-background-enable;
+    transition-duration: 300ms;
+    color: #E7EAE9;
+}
+
+#register-button:enabled:hover{
+    background: #e76f51;
 }
 
 .error-msg{

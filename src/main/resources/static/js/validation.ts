@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     disableRegisterButton();
 
-    nameInput?.addEventListener("input", () => {
+    nameInput?.addEventListener("focusout", () => {
         form.SetName(nameInput?.value == undefined ? "" : nameInput.value);
         if(form.Valid() && nameInput?.value.length != 0 && nameError != null){
             nameError.innerHTML = "";
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    passwordInput?.addEventListener("input", () => {
+    passwordInput?.addEventListener("focusout", () => {
         form.SetPassword(String(passwordInput?.value));
         if(form.Valid() && passwordInput?.value.length != 0 && passwordError != null){
            passwordError.innerHTML = "";
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    emailInput?.addEventListener("input", () => {
+    emailInput?.addEventListener("focusout", () => {
         form.SetEmail(emailInput?.value == undefined ? "" : emailInput.value);
         if(form.Valid() && emailInput?.value.length != 0 && emailError != null){
             emailError.innerHTML = "";

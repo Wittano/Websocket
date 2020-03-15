@@ -108,7 +108,7 @@ var form;
 document.addEventListener("DOMContentLoaded", function () {
     form = new FormValidation();
     disableRegisterButton();
-    nameInput === null || nameInput === void 0 ? void 0 : nameInput.addEventListener("input", function () {
+    nameInput === null || nameInput === void 0 ? void 0 : nameInput.addEventListener("focusout", function () {
         form.SetName((nameInput === null || nameInput === void 0 ? void 0 : nameInput.value) == undefined ? "" : nameInput.value);
         if (form.Valid() && (nameInput === null || nameInput === void 0 ? void 0 : nameInput.value.length) != 0 && nameError != null) {
             nameError.innerHTML = "";
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setErrorMessage(InputType.Name, "Nieporawna nazwa użytkownika");
         }
     });
-    passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.addEventListener("input", function () {
+    passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.addEventListener("focusout", function () {
         form.SetPassword(String(passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value));
         if (form.Valid() && (passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value.length) != 0 && passwordError != null) {
             passwordError.innerHTML = "";
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-    emailInput === null || emailInput === void 0 ? void 0 : emailInput.addEventListener("input", function () {
+    emailInput === null || emailInput === void 0 ? void 0 : emailInput.addEventListener("focusout", function () {
         form.SetEmail((emailInput === null || emailInput === void 0 ? void 0 : emailInput.value) == undefined ? "" : emailInput.value);
         if (form.Valid() && (emailInput === null || emailInput === void 0 ? void 0 : emailInput.value.length) != 0 && emailError != null) {
             emailError.innerHTML = "";
