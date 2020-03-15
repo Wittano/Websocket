@@ -107,6 +107,7 @@ var InputType;
 var form;
 document.addEventListener("DOMContentLoaded", function () {
     form = new FormValidation();
+    disableRegisterButton();
     nameInput === null || nameInput === void 0 ? void 0 : nameInput.addEventListener("input", function () {
         form.SetName((nameInput === null || nameInput === void 0 ? void 0 : nameInput.value) == undefined ? "" : nameInput.value);
         if (form.Valid() && (nameInput === null || nameInput === void 0 ? void 0 : nameInput.value.length) != 0 && nameError != null) {
@@ -199,11 +200,11 @@ function setErrorMessage(type, msg) {
 }
 function enableRegisterButton() {
     if (registerButton !== null)
-        registerButton.disabled = true;
+        registerButton.disabled = false;
 }
 function disableRegisterButton() {
     if (registerButton !== null)
-        registerButton.disabled = false;
+        registerButton.disabled = true;
 }
 function sameValue(origin, repeat) {
     return origin.value == repeat.value;

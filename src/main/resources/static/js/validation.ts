@@ -116,6 +116,8 @@ let form: FormValidation;
 document.addEventListener("DOMContentLoaded", () => {
     form = new FormValidation();
 
+    disableRegisterButton();
+
     nameInput?.addEventListener("input", () => {
         form.SetName(nameInput?.value == undefined ? "" : nameInput.value);
         if(form.Valid() && nameInput?.value.length != 0 && nameError != null){
@@ -201,12 +203,12 @@ function setErrorMessage(type: InputType, msg: string){
 
 function enableRegisterButton(){
     if(registerButton !== null)
-        registerButton.disabled = true;
+        registerButton.disabled = false;
 }
 
 function disableRegisterButton(){
     if(registerButton !== null)
-        registerButton.disabled = false;
+        registerButton.disabled = true;
 }
 
 function sameValue(origin: HTMLInputElement, repeat: HTMLInputElement): boolean {
