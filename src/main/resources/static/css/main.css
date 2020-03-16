@@ -1,5 +1,8 @@
 html {
   overflow-y: hidden; }
+  @media only screen and (max-height: 768px) {
+    html {
+      overflow-y: scroll; } }
 
 body {
   background: #f4a261;
@@ -9,9 +12,12 @@ body {
 header {
   background: #e76f51;
   color: #E7EAE9;
-  padding: 10px 10px -5px;
+  padding: 10px 10px;
   margin: 0;
   font-family: "Ubuntu", sans-serif; }
+
+.img-home {
+  transform: scale(2); }
 
 #header-content {
   text-align: center; }
@@ -30,17 +36,23 @@ header {
   top: 10px;
   left: 10px; }
 
+#home-img {
+  position: relative;
+  transform: scale(0.9); }
+
 main {
   height: 90vh;
   display: flex;
   justify-content: center;
   font-size: 18px; }
+  @media only screen and (max-height: 618px) {
+    main {
+      margin-top: 15vw; } }
 
 #form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 22%; }
+  justify-content: center; }
 
 #main-info {
   display: flex;
@@ -60,8 +72,19 @@ main {
   border-radius: 50px;
   margin-top: 10px;
   font-size: 22px;
-  padding: 15px;
-  font-family: "Hind Siliguri", sans-serif; }
+  padding: 25px;
+  font-family: "Hind Siliguri", sans-serif;
+  min-width: 300px; }
+  @media only screen and (max-width: 770px) {
+    .text-input {
+      padding: 20px; } }
+
+#date-div {
+  text-align: center; }
+
+#gender-choose {
+  display: flex;
+  justify-content: center; }
 
 #date {
   font-size: 18px; }
@@ -90,6 +113,7 @@ main {
   background: #e76f51; }
 
 .error-msg {
-  color: red; }
+  color: red;
+  text-align: center; }
 
-/*# sourceMappingURL=register.css.map */
+/*# sourceMappingURL=main.css.map */

@@ -11,6 +11,10 @@ $register-button-background-enable: #2a9d8f;
 
 html{
     overflow-y: hidden;
+
+    @media only screen and (max-height: 768px){
+        overflow-y: scroll;
+    }
 }
 
 body{
@@ -22,9 +26,13 @@ body{
 header {
     background: $header-background;
     color: $header-font-color;
-    padding: 10px 10px -5px;
+    padding: 10px 10px;
     margin: 0;
     font-family: $header-font;
+}
+
+.img-home{
+    transform: scale(2);
 }
 
 #header-content{
@@ -47,18 +55,26 @@ header {
     left: 10px;
 }
 
+#home-img{
+    position: relative;
+    transform: scale(0.9);
+}
+
 main{
     height: 90vh;
     display: flex;
     justify-content: center;
     font-size: 18px;
+
+    @media only screen and (max-height: 618px){
+        margin-top: 15vw;
+    }
 }
 
 #form{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 22%;
 }
 
 #main-info{
@@ -82,8 +98,22 @@ main{
     border-radius: $input-border-radius;
     margin-top: 10px;
     font-size: $input-font-size;
-    padding: 15px;
+    padding: 25px;
     font-family: $input-font;
+    min-width: 300px;
+
+    @media only screen and (max-width: 770px){
+        padding: 20px;
+    }
+}
+
+#date-div{
+    text-align: center;
+}
+
+#gender-choose{
+    display: flex;
+    justify-content: center;
 }
 
 #date{
@@ -93,9 +123,9 @@ main{
 #register-button{
    font-size: $input-font-size + 8;
    border-radius: $input-border-radius;
-    border: none;
-    padding: 20px;
-    transition-duration: 700ms;
+   border: none;
+   padding: 20px;
+   transition-duration: 700ms;
 }
 
 #register-button:disabled{
@@ -120,4 +150,5 @@ main{
 
 .error-msg{
     color: red;
+    text-align: center;
 }
