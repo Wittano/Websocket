@@ -32,6 +32,9 @@ build/
 
 #Node.js
 node_modules
+lib/
 
 #Scss
 .sass-cache*
+*.map
+*.css
