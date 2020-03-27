@@ -3,22 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Hind+Siliguri|Ubuntu&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Webscoket</h1>
-        <nav>
-            <a href="/register">Register</a>
-        </nav>
+        <div id="header-content">
+            <nav class="menu">
+                <a href="/register">Register</a>
+            </nav>
+            <h1 class="title">Webscoket</h1>
+        </div>
     </header>
     <main>
-        <form action="/login" th:object="${user}" method="post">
-            <input type="text" th:field="*{name}" placeholder="Nickname" name="name">
-            <input type="password" th:field="*{password}" placeholder="Password" name="password">
-            <nav>
+        <form id="form" action="/login" th:object="${user}" method="post">
+            <div id="main-info">
+                <input class="text-input" type="text" th:field="*{name}" placeholder="Nickname" name="name">
+                <input class="text-input" type="password" th:field="*{password}" placeholder="Password" name="password">
+            </div>
+            <nav class="nav">
                 <a href="/forget">Forget password?</a>
             </nav>
-            <button>Login</button>
+            <button id="register-button">Login</button>
         </form>
     </main>
 </body>
