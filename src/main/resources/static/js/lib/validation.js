@@ -11,7 +11,24 @@ var emailInput = document.querySelector("#email");
 var emailRepeatInput = document.querySelector("#repeat-email");
 var emailRepeatError = document.querySelector("#email-repeat-error");
 var registerButton = document.querySelector('#register-button');
+var radioBox = document.querySelectorAll(".radio-button");
+var dateInput = document.querySelector("#date");
 //#endregion
+//#region Enums
+var InputType;
+(function (InputType) {
+    InputType[InputType["NAME"] = 0] = "NAME";
+    InputType[InputType["PASSWORD"] = 1] = "PASSWORD";
+    InputType[InputType["EMAIL"] = 2] = "EMAIL";
+})(InputType || (InputType = {}));
+var UpdateFormType;
+(function (UpdateFormType) {
+    UpdateFormType[UpdateFormType["GENDER"] = 0] = "GENDER";
+    UpdateFormType[UpdateFormType["DATE"] = 1] = "DATE";
+    UpdateFormType[UpdateFormType["EMAIL"] = 2] = "EMAIL";
+})(UpdateFormType || (UpdateFormType = {}));
+//#endregion
+//#region Classes
 var ErrorMessage = /** @class */ (function () {
     function ErrorMessage(nameMsg, passwordMsg, emailMsg) {
         if (nameMsg === void 0) { nameMsg = ""; }
@@ -22,6 +39,7 @@ var ErrorMessage = /** @class */ (function () {
         this._emailMsg = emailMsg;
     }
     Object.defineProperty(ErrorMessage.prototype, "nameMsg", {
+        //#region Getters and Setters
         get: function () {
             return this._nameMsg;
         },
@@ -62,7 +80,31 @@ var FormValidation = /** @class */ (function () {
         this.username = nick;
         this.password = passwd;
         this.email = email;
+        this.isSelectedGender = false;
+        this.isSelectedDate = false;
+        this.isEmailRepeatCorrect = false;
     }
+    FormValidation.prototype.Update = function (obj, type) {
+        switch (type) {
+            case UpdateFormType.DATE:
+                {
+                    this.isSelectedDate = Boolean(obj);
+                }
+                break;
+            case UpdateFormType.GENDER:
+                {
+                    this.isSelectedGender = Boolean(obj);
+                }
+                break;
+            case UpdateFormType.EMAIL:
+                {
+                    this.isEmailRepeatCorrect = Boolean(obj);
+                }
+                break;
+            default:
+                break;
+        }
+    };
     FormValidation.prototype.ValidName = function (username) {
         var regex = new RegExp('[A-Za-z0-9]{4,}');
         if (regex.test(username)) {
@@ -85,8 +127,10 @@ var FormValidation = /** @class */ (function () {
     FormValidation.prototype.Valid = function () {
         return this.ValidName(this.username) &&
             this.ValidPassword(this.password) &&
-            this.ValidEmail(this.email);
+            this.ValidEmail(this.email) &&
+            this.isSelectedGender && this.isSelectedDate && this.isEmailRepeatCorrect;
     };
+    //#region Setters
     FormValidation.prototype.SetName = function (nick) {
         this.username = nick;
     };
@@ -96,14 +140,22 @@ var FormValidation = /** @class */ (function () {
     FormValidation.prototype.SetEmail = function (email) {
         this.email = email;
     };
+    //#endregion
+    FormValidation.prototype.radioUpdate = function (status) {
+        if (status === void 0) { status = true; }
+        this.Update(status, UpdateFormType.GENDER);
+    };
+    FormValidation.prototype.dateUpdate = function (status) {
+        if (status === void 0) { status = true; }
+        this.Update(status, UpdateFormType.DATE);
+    };
+    FormValidation.prototype.emailUpdate = function (status) {
+        if (status === void 0) { status = true; }
+        this.Update(status, UpdateFormType.EMAIL);
+    };
     return FormValidation;
 }());
-var InputType;
-(function (InputType) {
-    InputType[InputType["Name"] = 0] = "Name";
-    InputType[InputType["Password"] = 1] = "Password";
-    InputType[InputType["Email"] = 2] = "Email";
-})(InputType || (InputType = {}));
+//#endregion
 var form;
 document.addEventListener("DOMContentLoaded", function () {
     form = new FormValidation();
@@ -120,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         else {
             disableRegisterButton();
-            setErrorMessage(InputType.Name, "Nieporawna nazwa użytkownika");
+            setErrorMessage(InputType.NAME, "Nieporawna nazwa użytkownika");
         }
     });
     passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.addEventListener("focusout", function () {
@@ -135,12 +187,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         else {
             disableRegisterButton();
-            setErrorMessage(InputType.Password, "Niepoprawne hasło");
+            setErrorMessage(InputType.PASSWORD, "Niepoprawne hasło");
         }
     });
-    passwordRepeatInput === null || passwordRepeatInput === void 0 ? void 0 : passwordRepeatInput.addEventListener("focusout", function (e) {
+    passwordRepeatInput === null || passwordRepeatInput === void 0 ? void 0 : passwordRepeatInput.addEventListener("focusout", function () {
         if (passwordRepeatError != null) {
-            if ((passwordInput != null && passwordRepeatInput != null) && !sameValue(passwordInput, passwordRepeatInput)) {
+            if ((passwordInput != null && passwordRepeatInput != null) &&
+                !sameValue(passwordInput, passwordRepeatInput)) {
                 passwordRepeatError.innerHTML = "Hasła nie są takie same!";
             }
             else {
@@ -160,35 +213,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         else {
             disableRegisterButton();
-            setErrorMessage(InputType.Email, "Nieporawny email");
+            setErrorMessage(InputType.EMAIL, "Nieporawny email");
         }
     });
-    emailRepeatInput === null || emailRepeatInput === void 0 ? void 0 : emailRepeatInput.addEventListener("focusout", function (e) {
+    emailRepeatInput === null || emailRepeatInput === void 0 ? void 0 : emailRepeatInput.addEventListener("focusout", function () {
         if (emailRepeatError != null) {
             if ((emailInput != null && emailRepeatInput != null) && !sameValue(emailInput, emailRepeatInput)) {
                 emailRepeatError.innerHTML = "Maile nie są takie same!";
+                form.emailUpdate(false);
+                disableRegisterButton();
             }
             else {
                 emailRepeatError.innerHTML = "";
+                form.emailUpdate();
             }
         }
     });
+    radioBox.forEach(function (element) {
+        element === null || element === void 0 ? void 0 : element.addEventListener("click", function () {
+            form.radioUpdate();
+        });
+    });
+    dateInput === null || dateInput === void 0 ? void 0 : dateInput.addEventListener("input", function () {
+        form.dateUpdate();
+    });
 });
+//#region Functions
 function setErrorMessage(type, msg) {
     switch (type) {
-        case InputType.Name:
+        case InputType.NAME:
             {
                 if (nameError != null)
                     nameError.innerHTML = msg;
             }
             break;
-        case InputType.Email:
+        case InputType.EMAIL:
             {
                 if (emailError != null)
                     emailError.innerHTML = msg;
             }
             break;
-        case InputType.Password:
+        case InputType.PASSWORD:
             {
                 if (passwordError != null)
                     passwordError.innerHTML = msg;
@@ -209,3 +274,4 @@ function disableRegisterButton() {
 function sameValue(origin, repeat) {
     return origin.value == repeat.value;
 }
+//#endregion

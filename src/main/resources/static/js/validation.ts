@@ -1,22 +1,42 @@
 //#region Variables
-let nameError: Element | null = document.querySelector("#name-error");
-let passwordError: Element | null = document.querySelector("#password-error");
-let emailError: Element | null = document.querySelector("#email-error");
-let nameInput: HTMLInputElement | null = document.querySelector("#name");
-let passwordInput: HTMLInputElement | null = document.querySelector("#password");
-let passwordRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-password");
-let passwordRepeatError: HTMLSpanElement | null = document.querySelector("#password-repeat-error");
-let emailInput: HTMLInputElement | null = document.querySelector("#email");
-let emailRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-email");
-let emailRepeatError: HTMLSpanElement | null = document.querySelector("#email-repeat-error");
-let registerButton: HTMLButtonElement | null = document.querySelector('#register-button');
+const nameError: Element | null = document.querySelector("#name-error");
+const passwordError: Element | null = document.querySelector("#password-error");
+const emailError: Element | null = document.querySelector("#email-error");
+const nameInput: HTMLInputElement | null = document.querySelector("#name");
+const passwordInput: HTMLInputElement | null = document.querySelector("#password");
+const passwordRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-password");
+const passwordRepeatError: HTMLSpanElement | null = document.querySelector("#password-repeat-error");
+const emailInput: HTMLInputElement | null = document.querySelector("#email");
+const emailRepeatInput: HTMLInputElement | null = document.querySelector("#repeat-email");
+const emailRepeatError: HTMLSpanElement | null = document.querySelector("#email-repeat-error");
+const registerButton: HTMLButtonElement | null = document.querySelector('#register-button');
+const radioBox: NodeListOf<HTMLInputElement> = document.querySelectorAll(".radio-button");
+const dateInput: HTMLDataElement | null = document.querySelector("#date");
 //#endregion
 
+//#region Interfaces
+interface IFormObserver {
+    radioUpdate(status: boolean): void;
+    dateUpdate(status: boolean): void;
+    emailUpdate(status: boolean): void;
+}
+//#endregion
+
+//#region Enums
+enum InputType {
+    NAME, PASSWORD, EMAIL
+}
+
+enum UpdateFormType {
+    GENDER, DATE, EMAIL
+}
+//#endregion
+
+//#region Classes
 class ErrorMessage {
     private _nameMsg: string;
     private _passwordMsg: string;
     private _emailMsg: string;
-
 
     constructor(nameMsg: string = "", passwordMsg: string = "", emailMsg: string = "") {
         this._nameMsg = nameMsg;
@@ -24,6 +44,7 @@ class ErrorMessage {
         this._emailMsg = emailMsg;
     }
 
+    //#region Getters and Setters
     get nameMsg(): string {
         return this._nameMsg;
     }
@@ -47,19 +68,42 @@ class ErrorMessage {
     set emailMsg(value: string) {
         this._emailMsg = value;
     }
+    //#endregion
 }
 
-class FormValidation {
+class FormValidation implements IFormObserver{
     private username: string;
     private password: string;
     private email: string;
-
+    private isSelectedGender: boolean;
+    private isSelectedDate: boolean;
+    private isEmailRepeatCorrect: boolean;
+    
     public errorMessage: ErrorMessage = new ErrorMessage();
 
     constructor(nick: string = "", passwd: string = "", email: string = ""){
         this.username = nick;
         this.password = passwd;
         this.email = email;
+        this.isSelectedGender = false;
+        this.isSelectedDate = false;
+        this.isEmailRepeatCorrect = false;
+    }
+
+    private Update(obj: Object, type: UpdateFormType){
+        switch (type) {
+            case UpdateFormType.DATE:{
+               this.isSelectedDate = Boolean(obj);
+            }break;
+            case UpdateFormType.GENDER:{
+                this.isSelectedGender = Boolean(obj);
+            }break;
+            case UpdateFormType.EMAIL:{
+                this.isEmailRepeatCorrect = Boolean(obj);
+            }break;
+            default:
+                break;
+        }
     }
 
     public ValidName(username: string): boolean {
@@ -89,11 +133,13 @@ class FormValidation {
     }
 
     public Valid(): boolean {
-        return this.ValidName(this.username) && 
+        return this.ValidName(this.username) &&
             this.ValidPassword(this.password) &&
-            this.ValidEmail(this.email);
+            this.ValidEmail(this.email) &&
+            this.isSelectedGender && this.isSelectedDate && this.isEmailRepeatCorrect;
     }
 
+    //#region Setters
     public SetName(nick: string){
         this.username = nick;
     }
@@ -105,11 +151,21 @@ class FormValidation {
     public SetEmail(email: string){
         this.email = email;
     }
-}
+    //#endregion
 
-enum InputType {
-    Name, Password, Email
+    public radioUpdate(status: boolean = true) {
+        this.Update(status, UpdateFormType.GENDER);
+    }
+
+    public dateUpdate(status: boolean = true) {
+        this.Update(status, UpdateFormType.DATE);
+    }
+
+    emailUpdate(status: boolean = true): void {
+        this.Update(status, UpdateFormType.EMAIL);
+    }
 }
+//#endregion
 
 let form: FormValidation;
 
@@ -128,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 nameError.innerHTML = "";
         } else{
             disableRegisterButton();
-            setErrorMessage(InputType.Name, "Nieporawna nazwa użytkownika");
+            setErrorMessage(InputType.NAME, "Nieporawna nazwa użytkownika");
         }
     });
 
@@ -142,12 +198,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 passwordError.innerHTML = "";
         } else {
             disableRegisterButton();
-            setErrorMessage(InputType.Password, "Niepoprawne hasło");
+            setErrorMessage(InputType.PASSWORD, "Niepoprawne hasło");
         }
     });
-    passwordRepeatInput?.addEventListener("focusout", (e) => {
+    passwordRepeatInput?.addEventListener("focusout", () => {
         if(passwordRepeatError != null){
-            if((passwordInput != null && passwordRepeatInput != null) && !sameValue(passwordInput, passwordRepeatInput)){
+            if((passwordInput != null && passwordRepeatInput != null) &&
+                !sameValue(passwordInput, passwordRepeatInput)){
                 passwordRepeatError.innerHTML = "Hasła nie są takie same!";
             } else {
                 passwordRepeatError.innerHTML = "";
@@ -167,31 +224,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             disableRegisterButton();
-            setErrorMessage(InputType.Email, "Nieporawny email");
+            setErrorMessage(InputType.EMAIL, "Nieporawny email");
         }
     });
-    emailRepeatInput?.addEventListener("focusout", (e) => {
+    emailRepeatInput?.addEventListener("focusout", () => {
         if(emailRepeatError != null){
             if((emailInput != null && emailRepeatInput != null) && !sameValue(emailInput, emailRepeatInput)){
                 emailRepeatError.innerHTML = "Maile nie są takie same!";
+                form.emailUpdate(false);
+                disableRegisterButton();
             } else {
                 emailRepeatError.innerHTML = "";
+                form.emailUpdate();
             }
         }
     });
+
+
+    radioBox.forEach(element => {
+        element?.addEventListener("click", () => {
+            form.radioUpdate();
+        });
+    });
+
+    dateInput?.addEventListener("input", () => {
+       form.dateUpdate();
+    });
 });
 
+//#region Functions
 function setErrorMessage(type: InputType, msg: string){
    switch (type) {
-       case InputType.Name:{
+       case InputType.NAME:{
             if(nameError != null)
                 nameError.innerHTML = msg;
        } break;
-       case InputType.Email: {
+       case InputType.EMAIL: {
             if(emailError != null)
                 emailError.innerHTML = msg;
        } break;
-       case InputType.Password: {
+       case InputType.PASSWORD: {
             if(passwordError != null)
                 passwordError.innerHTML = msg;
        } break;
@@ -214,3 +286,4 @@ function disableRegisterButton(){
 function sameValue(origin: HTMLInputElement, repeat: HTMLInputElement): boolean {
     return origin.value == repeat.value;
 }
+//#endregion
