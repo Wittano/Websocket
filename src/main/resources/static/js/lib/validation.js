@@ -181,7 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
             passwordError.innerHTML = "";
             enableRegisterButton();
         }
-        else if ((passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value.length) == 0 || form.ValidPassword(String(passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value))) {
+        else if ((passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value.length) == 0 ||
+            form.ValidPassword(String(passwordInput === null || passwordInput === void 0 ? void 0 : passwordInput.value))) {
             if (passwordError != null)
                 passwordError.innerHTML = "";
         }
@@ -218,7 +219,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     emailRepeatInput === null || emailRepeatInput === void 0 ? void 0 : emailRepeatInput.addEventListener("focusout", function () {
         if (emailRepeatError != null) {
-            if ((emailInput != null && emailRepeatInput != null) && !sameValue(emailInput, emailRepeatInput)) {
+            if ((emailInput != null && emailRepeatInput != null) &&
+                !sameValue(emailInput, emailRepeatInput)) {
                 emailRepeatError.innerHTML = "Maile nie są takie same!";
                 form.emailUpdate(false);
                 disableRegisterButton();
@@ -232,10 +234,16 @@ document.addEventListener("DOMContentLoaded", function () {
     radioBox.forEach(function (element) {
         element === null || element === void 0 ? void 0 : element.addEventListener("click", function () {
             form.radioUpdate();
+            if (form.Valid()) {
+                enableRegisterButton();
+            }
         });
     });
     dateInput === null || dateInput === void 0 ? void 0 : dateInput.addEventListener("input", function () {
         form.dateUpdate();
+        if (form.Valid()) {
+            enableRegisterButton();
+        }
     });
 });
 //#region Functions

@@ -193,7 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if(form.Valid() && passwordInput?.value.length != 0 && passwordError != null){
            passwordError.innerHTML = "";
            enableRegisterButton();
-        } else if(passwordInput?.value.length == 0 || form.ValidPassword(String(passwordInput?.value))){
+        } else if(passwordInput?.value.length == 0 ||
+            form.ValidPassword(String(passwordInput?.value))){
             if(passwordError != null)
                 passwordError.innerHTML = "";
         } else {
@@ -229,7 +230,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     emailRepeatInput?.addEventListener("focusout", () => {
         if(emailRepeatError != null){
-            if((emailInput != null && emailRepeatInput != null) && !sameValue(emailInput, emailRepeatInput)){
+            if((emailInput != null && emailRepeatInput != null) &&
+                !sameValue(emailInput, emailRepeatInput)){
                 emailRepeatError.innerHTML = "Maile nie są takie same!";
                 form.emailUpdate(false);
                 disableRegisterButton();
@@ -244,11 +246,17 @@ document.addEventListener("DOMContentLoaded", () => {
     radioBox.forEach(element => {
         element?.addEventListener("click", () => {
             form.radioUpdate();
+            if(form.Valid()){
+                enableRegisterButton();
+            }
         });
     });
 
     dateInput?.addEventListener("input", () => {
        form.dateUpdate();
+       if(form.Valid()){
+           enableRegisterButton();
+       }
     });
 });
 
