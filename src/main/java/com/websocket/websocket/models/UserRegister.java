@@ -1,27 +1,48 @@
 package com.websocket.websocket.models;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserRegister {
+@Entity
+@Table(name = "users")
+public class UserRegister implements Serializable {
 
     public enum Gender{
        Male, Female
     }
 
     @NotNull
-    @Size(min = 4, max = 50)
-    private String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    private long id;
+
     @NotNull
-    @Min(4)
+    @Size(min = 4, max = 30)
+    @Column(name = "name", unique = true, nullable = false)
+    private String name;
+
+    @NotNull
+    @Size(min = 4, max = 300)
+    @Column(name = "password", nullable = false)
     private String password;
+
     @NotNull
     @Email
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @NotNull
+    @Column(name = "birthday", nullable = false)
     private Date birthday;
+
+    @NotNull
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
     public String getName() {
@@ -62,5 +83,17 @@ public class UserRegister {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRegister{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", birthday=" + birthday +
+                ", gender=" + gender +
+                '}';
     }
 }
