@@ -22,13 +22,13 @@
         <form id="form" action="/register" method="post" th:object="${user}">
             <div id="main-info">
                 <input class="text-input" type="text" placeholder="Nickname" name="name" th:field="*{name}" required>
-                <span class="error-msg" id="name-error"></span>
+                <span class="error-msg" id="name-error" th:errors="*{name}"></span>
                 <input class="text-input" type="password" placeholder="Password" th:field="*{password}" required>
-                <span class="error-msg" id="password-error"></span>
+                <span class="error-msg" id="password-error" th:errors="*{password}"></span>
                 <input class="text-input" type="password" id="repeat-password" placeholder="Repeat Password" required>
                 <span class="error-msg" id="password-repeat-error"></span>
                 <input class="text-input" type="email" placeholder="Email" th:field="*{email}" required>
-                <span class="error-msg" id="email-error"></span>
+                <span class="error-msg" id="email-error" th:errors="*{email}">Email</span>
                 <input class="text-input" type="email" placeholder="Repeat Email" id="repeat-email" required>
                 <span class="error-msg" id="email-repeat-error"></span>
             </div>
