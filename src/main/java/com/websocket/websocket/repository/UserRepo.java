@@ -1,5 +1,6 @@
 package com.websocket.websocket.repository;
 
+import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.UserRepository;
 import com.websocket.websocket.models.User;
 import org.apache.lucene.search.Query;
@@ -43,7 +44,10 @@ public class UserRepo implements UserRepository<User, Long> {
 
     @Override
     @Transactional
-    public void save(User object) {
+    public void save(User object) throws UserDuplicateException {
+        if(findByName(object.getName()).isPresent()){
+            throw new UserDuplicateException("You can't save this user cause he's exist in database");
+        }
         entityManager.persist(object);
     }
 
