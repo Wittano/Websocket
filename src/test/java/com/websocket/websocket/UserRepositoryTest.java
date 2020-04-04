@@ -1,5 +1,6 @@
 package com.websocket.websocket;
 
+import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.UserRepository;
 import com.websocket.websocket.models.User;
 import org.assertj.core.util.Lists;
@@ -64,7 +65,7 @@ public class UserRepositoryTest {
         List<User> users = repository.findAll();
         try {
             repository.save(testUser);
-        } catch (SQLIntegrityConstraintViolationException e) {
+        } catch (SQLIntegrityConstraintViolationException | UserDuplicateException e) {
             return;
         }
 
