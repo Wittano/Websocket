@@ -228,6 +228,9 @@ document.addEventListener("DOMContentLoaded", function () {
             else {
                 emailRepeatError.innerHTML = "";
                 form.emailUpdate();
+                if (form.Valid()) {
+                    enableRegisterButton();
+                }
             }
         }
     });
