@@ -33,6 +33,10 @@ public class UserRepo implements UserRepository<User, Long> {
 
     @Override
     public Optional<User> findByName(String name) {
+        if(!isExistByName(name)){
+            return Optional.empty();
+        }
+
         return Optional.of((User) entityManager.createQuery("from User u where u.name = :name").
                 setParameter("name", name).getSingleResult());
     }
@@ -45,7 +49,7 @@ public class UserRepo implements UserRepository<User, Long> {
     @Override
     @Transactional
     public void save(User object) throws UserDuplicateException {
-        if(findByName(object.getName()).isPresent()){
+        if(isExistByName(object.getName())) {
             throw new UserDuplicateException("You can't save this user cause he's exist in database");
         }
         entityManager.persist(object);
@@ -66,14 +70,21 @@ public class UserRepo implements UserRepository<User, Long> {
     }
 
     @Override
-    public boolean isExistByName(String name) throws EmptyResultDataAccessException {
+    public boolean isExistByName(String name) {
         try {
-            User user = (User) entityManager.createQuery("from User u where u.name = :n").
-                    setParameter("n", name).getSingleResult();
+            User user = (User) entityManager.createQuery("from User u where u.name = :name").
+                    setParameter("name", name).getSingleResult();
 
             return user.getName().equals(name);
         } catch (NoResultException e){
             return false;
         }
+    }
+
+    @Override
+    @Transactional
+    public User update(User target, User update) {
+        target.merge(update);
+        return target;
     }
 }

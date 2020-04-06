@@ -4,19 +4,16 @@ import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.UserRepository;
 import com.websocket.websocket.models.User;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @SpringBootTest
 public class UserRepositoryTest {
@@ -95,5 +92,45 @@ public class UserRepositoryTest {
         }
 
         Assertions.assertTrue(repository.findByName(testUser.getName()).isPresent());
+    }
+
+    @Test
+    public void throw_NoResultException_in_findByName(){
+        testUser.setName("eftrhwe3rkhbghskhdlhrfbghiwe");
+        Assertions.assertFalse(repository.isExistByName(testUser.getName()));
+        Assertions.assertNotEquals(testUser, repository.findByName(testUser.getName()));
+
+        testUser.setName("TestUser");
+    }
+
+    @Test
+    public void update_user(){
+        User copyTestUser = null;
+        User testUser2 = null;
+        try {
+            copyTestUser = (User) testUser.clone();
+            testUser2 = (User) testUser.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        Objects.requireNonNull(testUser2).setName("Bob the builder");
+
+        copyTestUser.merge(testUser2);
+
+        Assertions.assertNotEquals(copyTestUser, testUser);
+        Assertions.assertNotEquals(testUser2, testUser);
+
+        if(!repository.isExistByName(testUser.getName())){
+            add_new_user();
+        }
+
+        User userFromDatabase = repository.findByName(testUser.getName()).get();
+
+        repository.update(userFromDatabase, copyTestUser);
+
+        User checkUserFromDatabase = repository.findByName(testUser.getName()).get();
+
+        Assertions.assertNotEquals(userFromDatabase, checkUserFromDatabase);
     }
 }

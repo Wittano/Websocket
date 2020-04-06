@@ -1,5 +1,6 @@
 package com.websocket.websocket.models;
 
+import com.websocket.websocket.interfaces.Model;
 import org.hibernate.search.annotations.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -7,11 +8,12 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 @Indexed
-public class User implements Serializable {
+public class User implements Serializable, Model<User>, Cloneable {
 
     public enum Gender{
        Male, Female
@@ -107,5 +109,32 @@ public class User implements Serializable {
                 ", birthday=" + birthday +
                 ", gender=" + gender +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                name.equals(user.name) &&
+                password.equals(user.password) &&
+                email.equals(user.email) &&
+                Objects.equals(birthday, user.birthday) &&
+                gender == user.gender;
+    }
+
+    @Override
+    public void merge(User mergeObject) {
+        this.name = !this.name.equals(mergeObject.getName()) ? mergeObject.getName() : this.name;
+        this.password = !this.password.equals(mergeObject.getPassword()) ? mergeObject.getPassword() : this.password;
+        this.email = !this.email.equals(mergeObject.getEmail()) ? mergeObject.getEmail() : this.email;
+        this.birthday = !this.birthday.equals(mergeObject.getBirthday()) ? mergeObject.getBirthday() : this.birthday;
+        this.gender = !this.gender.equals(mergeObject.getGender()) ? mergeObject.getGender() : this.gender;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

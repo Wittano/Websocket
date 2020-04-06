@@ -14,4 +14,5 @@ public interface UserRepository<T extends User, ID extends Number> {
     void save(T object) throws SQLIntegrityConstraintViolationException, UserDuplicateException;
     void deleteByName(String name);
     boolean isExistByName(String name) throws EmptyResultDataAccessException;
+    User update(User target, User update);
 }
