@@ -1,40 +1,37 @@
 package com.websocket.websocket.controller;
 
-import com.websocket.websocket.repository.UserRepository;
-import com.websocket.websocket.models.UserRegister;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.websocket.websocket.interfaces.service.UsersService;
+import com.websocket.websocket.models.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.logging.Logger;
 
 @Controller
 public class UserController {
 
-    private Logger log;
-    private UserRepository repo;
-    private PasswordEncoder passwordEncoder;
+    private UsersService usersService;
 
-    public UserController(UserRepository repository, PasswordEncoder passwordEncoder) {
-        repo = repository;
-        this.passwordEncoder = passwordEncoder;
-
-        log = Logger.getLogger(this.getClass().getName());
+    public UserController(UsersService usersService) {
+        this.usersService = usersService;
     }
 
-    @PostMapping("/register")
-    public String register(@Valid UserRegister user, BindingResult result, Model model){
+    @PostMapping("/user")
+    public String register(@Valid @ModelAttribute User user, BindingResult result){
         if(result.hasErrors()) {
-            model.addAttribute("user", new UserRegister());
             return "register";
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        repo.save(user);
+        usersService.save(user);
 
         return "redirect:/";
+    }
+
+    @DeleteMapping("/user/{name}")
+    public String deleteUser(@PathVariable("name") String name){
+        usersService.delete(name);
+
+        return "index";
     }
 }

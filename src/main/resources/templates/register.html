@@ -19,7 +19,7 @@
         </div>
     </header>
     <main>
-        <form id="form" action="/register" method="post" th:object="${user}">
+        <form id="form" action="/user" method="post" th:object="${user}">
             <div id="main-info">
                 <input class="text-input" type="text" placeholder="Nickname" name="name" th:field="*{name}" required>
                 <span class="error-msg" id="name-error" th:errors="*{name}"></span>
