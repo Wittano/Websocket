@@ -17,14 +17,18 @@
         </div>
     </header>
     <main>
-        <form id="form" action="/login" th:object="${user}" method="post">
+        <form id="form" action="/verify" th:object="${user}" method="post">
             <div id="main-info">
-                <input class="text-input" type="text" th:field="*{name}" placeholder="Nickname" name="name">
-                <span class="error-msg" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>
+                <input class="text-input" type="text" th:field="*{username}" placeholder="Username" name="username">
+                <span class="error-msg" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name error</span>
                 <input class="text-input" type="password" th:field="*{password}" placeholder="Password" name="password">
                 <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
             </div>
             <nav class="nav">
+                <div th:if="${userError}">
+                    <span class="error-msg" th:text="${userError}">User Error</span>
+                    <br>
+                </div>
                 <a href="/forget">Forget password?</a>
             </nav>
             <button id="register-button">Login</button>

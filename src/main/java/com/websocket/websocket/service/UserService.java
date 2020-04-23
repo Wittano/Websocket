@@ -2,7 +2,7 @@ package com.websocket.websocket.service;
 
 import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.service.UsersService;
-import com.websocket.websocket.models.User;
+import com.websocket.websocket.models.UserDB;
 import com.websocket.websocket.interfaces.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,61 +10,49 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class UserService implements UsersService {
 
-    private UserRepository<User, Long> repo;
+    private UserRepository<UserDB, Long> repo;
 
     private PasswordEncoder passwordEncoder;
-    private Logger logger;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepository<User, Long> repo) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository<UserDB, Long> repo) {
         this.passwordEncoder = passwordEncoder;
 
-        logger = Logger.getLogger(this.getClass().getSimpleName());
         this.repo = repo;
     }
 
     @Override
-    public boolean isUserExist(User user) {
+    public boolean isUserExist(UserDB userDB) {
         return true;
     }
 
     @Override
-    public void login(User user) {
-        if(isUserExist(user)){
-            Optional<User> supposedUserOptional = repo.findByName(user.getName());
-            User supposedUser = null;
-            if(supposedUserOptional.isPresent()){
-                supposedUser = supposedUserOptional.get();
-            }
+    public boolean userVerify(UserDB userDB) throws UsernameNotFoundException {
+        if(!isUserExist(userDB)){
+            throw new UsernameNotFoundException(String.format("User %s wasn't found", userDB.getUsername()));
+        }
 
-            passwordEncoder.matches(Objects.requireNonNull(supposedUser).getPassword(), user.getPassword());
-            {
-                logger.info("Udało się!");
-            }
-        }
-        else {
-            throw new UsernameNotFoundException(String.format("Username %s isn't exist", user.getName()));
-        }
+        Optional<UserDB> dbUser = repo.findByName(userDB.getUsername());
+
+        return dbUser.filter(value -> passwordEncoder.matches(userDB.getPassword(), value.getPassword())).isPresent();
     }
 
     @Override
-    public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void save(UserDB userDB) {
+        userDB.setPassword(passwordEncoder.encode(userDB.getPassword()));
         try {
-            repo.save(user);
+            repo.save(userDB);
         } catch (SQLIntegrityConstraintViolationException | UserDuplicateException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void update(@NotNull User target, User update) {
+    public void update(@NotNull UserDB target, UserDB update) {
         repo.update(target, update);
     }
 

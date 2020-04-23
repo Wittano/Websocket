@@ -2,54 +2,44 @@ package com.websocket.websocket.repository;
 
 import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.UserRepository;
-import com.websocket.websocket.models.User;
-import org.apache.lucene.search.Query;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
-import org.jboss.jdeparser.FormatPreferences;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.websocket.websocket.models.UserDB;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Repository
-public class UserRepo implements UserRepository<User, Long> {
+public class UserRepo implements UserRepository<UserDB, Long> {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public UserRepo(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<UserDB> findByName(String name) {
         if(!isExistByName(name)){
             return Optional.empty();
         }
 
-        return Optional.of((User) entityManager.createQuery("from User u where u.name = :name").
-                setParameter("name", name).getSingleResult());
+        return Optional.of((UserDB) entityManager.createQuery("from UserDB u where u.username = :username").
+                setParameter("username", name).getSingleResult());
     }
 
     @Override
-    public List<User> findAll() {
-        return entityManager.createQuery("from User u").getResultList();
+    public List<UserDB> findAll() {
+        return entityManager.createQuery("from UserDB u").getResultList();
     }
 
     @Override
     @Transactional
-    public void save(User object) throws UserDuplicateException {
-        if(isExistByName(object.getName())) {
+    public void save(UserDB object) throws UserDuplicateException {
+        if(isExistByName(object.getUsername())) {
             throw new UserDuplicateException("You can't save this user cause he's exist in database");
         }
         entityManager.persist(object);
@@ -58,11 +48,11 @@ public class UserRepo implements UserRepository<User, Long> {
     @Override
     @Transactional
     public void deleteByName(String name) {
-        Optional<User> userOptional = findByName(name);
+        Optional<UserDB> userOptional = findByName(name);
         if(userOptional.isPresent()){
-            User user = userOptional.get();
+            UserDB userDB = userOptional.get();
 
-            entityManager.remove(user);
+            entityManager.remove(userDB);
         }
         else {
             throw new NoSuchElementException(String.format("User %s wasn't found!", name));
@@ -72,10 +62,10 @@ public class UserRepo implements UserRepository<User, Long> {
     @Override
     public boolean isExistByName(String name) {
         try {
-            User user = (User) entityManager.createQuery("from User u where u.name = :name").
+            UserDB userDB = (UserDB) entityManager.createQuery("from UserDB u where u.username = :name").
                     setParameter("name", name).getSingleResult();
 
-            return user.getName().equals(name);
+            return userDB.getUsername().equals(name);
         } catch (NoResultException e){
             return false;
         }
@@ -83,7 +73,7 @@ public class UserRepo implements UserRepository<User, Long> {
 
     @Override
     @Transactional
-    public User update(User target, User update) {
+    public UserDB update(UserDB target, UserDB update) {
         target.merge(update);
         return target;
     }

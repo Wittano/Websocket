@@ -21,8 +21,8 @@
     <main>
         <form id="form" action="/user" method="post" th:object="${user}">
             <div id="main-info">
-                <input class="text-input" type="text" placeholder="Nickname" name="name" th:field="*{name}" required>
-                <span class="error-msg" id="name-error" th:errors="*{name}"></span>
+                <input class="text-input" type="text" placeholder="Nickusername" name="username" th:field="*{username}" required>
+                <span class="error-msg" id="username-error" th:errors="*{username}"></span>
                 <input class="text-input" type="password" placeholder="Password" th:field="*{password}" required>
                 <span class="error-msg" id="password-error" th:errors="*{password}"></span>
                 <input class="text-input" type="password" id="repeat-password" placeholder="Repeat Password" required>

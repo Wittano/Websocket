@@ -1,7 +1,7 @@
 package com.websocket.websocket.controller;
 
 import com.websocket.websocket.interfaces.service.UsersService;
-import com.websocket.websocket.models.User;
+import com.websocket.websocket.models.UserDB;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,12 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public String register(@Valid @ModelAttribute User user, BindingResult result){
+    public String register(@Valid @ModelAttribute UserDB userDB, BindingResult result){
         if(result.hasErrors()) {
             return "register";
         }
 
-        usersService.save(user);
+        usersService.save(userDB);
 
         return "redirect:/";
     }
