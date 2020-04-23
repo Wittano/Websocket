@@ -1,0 +1,15 @@
+@import "variable";
+
+html{
+  overflow-y: hidden;
+
+  @media only screen and (max-height: 768px){
+    overflow-y: scroll;
+  }
+}
+
+body{
+  background: $body-background;
+  margin: 0;
+  padding: 0;
+}

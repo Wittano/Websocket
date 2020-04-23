@@ -9,42 +9,6 @@ body {
   margin: 0;
   padding: 0; }
 
-header {
-  background: #e76f51;
-  color: #E7EAE9;
-  padding: 10px 10px;
-  margin: 0;
-  font-family: "Ubuntu", sans-serif; }
-
-.img-home {
-  transform: scale(2); }
-
-#header-content {
-  text-align: center; }
-
-a {
-  text-decoration: none;
-  color: #E7EAE9;
-  text-align: center; }
-
-.title {
-  font-size: 40pt;
-  margin-top: 0;
-  margin-bottom: 10px;
-  padding-bottom: 20px;
-  padding-top: 7px; }
-
-.menu {
-  text-align: left;
-  font-size: 34px;
-  position: absolute;
-  top: 10px;
-  left: 10px; }
-
-#home-img {
-  position: relative;
-  transform: scale(0.9); }
-
 main {
   height: 90vh;
   display: flex;
@@ -72,18 +36,6 @@ main {
   margin-top: 10px;
   margin-bottom: 20px; }
 
-.text-input {
-  border: #E7EAE9 solid 1px;
-  border-radius: 50px;
-  margin-top: 10px;
-  font-size: 22px;
-  padding: 25px;
-  font-family: "Hind Siliguri", sans-serif;
-  min-width: 300px; }
-  @media only screen and (max-width: 770px) {
-    .text-input {
-      padding: 20px; } }
-
 .nav {
   text-align: center;
   margin-bottom: 7px;
@@ -95,32 +47,6 @@ main {
 #gender-choose {
   display: flex;
   justify-content: center; }
-
-#date {
-  font-size: 18px; }
-
-#register-button {
-  font-size: 30px;
-  border-radius: 50px;
-  border: none;
-  padding: 20px;
-  transition-duration: 700ms; }
-
-#register-button:disabled {
-  background: #264653;
-  color: #597986; }
-
-#register-button:disabled:hover {
-  background: #264653;
-  color: #597986; }
-
-#register-button:enabled {
-  background: #2a9d8f;
-  transition-duration: 300ms;
-  color: #E7EAE9; }
-
-#register-button:enabled:hover {
-  background: #e76f51; }
 
 .error-msg {
   color: red;

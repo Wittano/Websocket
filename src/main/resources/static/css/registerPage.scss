@@ -1,0 +1,23 @@
+@import "input";
+@import "global";
+@import "main";
+@import "form";
+@import "header";
+
+#date-div{
+  margin-top: $form-margin;
+}
+
+#gender-choose{
+  margin-top: $form-margin;
+  margin-bottom: $form-margin * 2;
+}
+
+#date-div{
+  text-align: center;
+}
+
+#gender-choose{
+  display: flex;
+  justify-content: center;
+}

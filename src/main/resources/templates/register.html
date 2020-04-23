@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/registerPage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Hind+Siliguri|Ubuntu&display=swap" rel="stylesheet">
 </head>
@@ -33,8 +33,8 @@
                 <span class="error-msg" id="email-repeat-error"></span>
             </div>
             <div id="date-div">
-                <label for="date">Your birthday</label>
-                <input id="date" type="date" th:field="*{birthday}" required>
+                <label for="date-input">Your birthday</label>
+                <input id="date-input" type="date" th:field="*{birthday}" required>
             </div>
             <div id="gender-choose">
                 <div>
@@ -46,7 +46,7 @@
                     <input class="radio-button" id="male-gender" th:field="*{gender}" type="radio" name="gender" value="Male">
                 </div>
             </div>
-            <button id="register-button">Register</button>
+            <button id="basic-button">Register</button>
         </form>
     </main>
     <footer>
