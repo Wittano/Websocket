@@ -1,15 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Hind+Siliguri|Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/mainPage.css">
 </head>
 <body>
     <header>
-        <a href="/logout">Wyloguj</a>
-        <h1>Main</h1>
+        <a href="/logout">
+            <i class="fa fa-sign-out icon" aria-hidden="true"></i>
+        </a>
+        <h1 id="username" th:text="Witaj + ' ' + ${username}"></h1>
+        <a class="link" href="/main/profil">
+            <h2>Profile</h2>
+            <i class="fa fa-user icon" aria-hidden="true"></i>
+        </a>
     </header>
+    <main>
+        <div id="main-content">
+            <div id="chat">
+                <div id="chat-receiver">Bot</div>
+                <div id="chat-content">
+                    <div class="receiver-message">
+                        <p class="message-content">Cześć jestem Bot</p>
+                        <p class="message-data">Data</p>
+                    </div>
+                    <div>
+                        <p class="message-sender-content">Cześć</p>
+                        <p class="message-sender-data">Data2</p>
+                    </div>
+                </div>
+            </div>
+            <form id="message-from" action="/message" method="post">
+                <input class="text-input" type="text" name="msg" placeholder="Enter your message...">
+                <button class="">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <div id="friends-list">
+            <ul>
+                <li class="friend">Hunter</li>
+                <li class="friend">Masło</li>
+                <li class="friend">Volvo</li>
+            </ul>
+        </div>
+    </main>
+    <script src="/js/lib/username.js"></script>
+    <script src="/js/lib/mainPage.js"></script>
 </body>
 </html>

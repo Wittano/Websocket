@@ -1,0 +1,157 @@
+@import "header";
+@import "global";
+
+$border-chat-color: #B5BDC4;
+$border: 2px solid $border-chat-color;
+
+header{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.icon{
+  transform: scale(4);
+  margin: 30px;
+}
+
+.link{
+  display: flex;
+  flex-direction: row;
+}
+
+main{
+  display: flex;
+  flex-direction: row;
+}
+
+#main-content{
+  width: 90%;
+}
+
+#chat-receiver{
+  background: white;
+  padding: 10px;
+  text-align: center;
+  border-right: $border;
+  border-bottom: $border;
+  font-size: $input-font-size;
+}
+
+#chat{
+  background: #fff;
+  font-family: $header-font;
+  border-right: $border;
+}
+
+#chat-content{
+  background: white;
+  border-right: 2px solid $border-chat-color;
+  height: 100vh;
+}
+
+.message-content{
+  padding: 15px 20px;
+  background: #B5BDC4;
+  color: white;
+  width: 30%;
+  border-top-width: 10px;
+  border-top-style: solid;
+  border-color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 1px;
+  border-radius: 200px;
+  margin-left: 15px;
+  font-size: 18px;
+}
+
+.message-data{
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: 10%;
+  margin-left: 25%;
+  text-align: center;
+  color: grey;
+}
+
+.message-sender-content{
+  padding: 15px 20px;
+  background: $header-background;
+  width: 30%;
+  color: white;
+  border-top-width: 10px;
+  border-top-style: solid;
+  border-color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 1px;
+  border-radius: 200px;
+  margin-left: 65%;
+  font-size: 18px;
+}
+
+.message-sender-data{
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: 10%;
+  margin-left: 85%;
+  text-align: center;
+  color: grey;
+}
+
+#message-from{
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+}
+
+.text-input{
+  border-top: 5px solid $border-chat-color;
+  border-left: none;
+  border-bottom: none;
+  border-right: none;
+  font-size: $input-font-size;
+  width: 100%;
+  padding: 9px;
+}
+
+button{
+  font-size: 20px;
+  font-family: $header-font;
+  color: $header-font-color;
+  padding: 0 30px;
+  border: none;
+  transition-duration: 300ms;
+  background: $header-background;
+}
+
+button:hover{
+  background: #2a9d8f;
+}
+
+#friends-list{
+  width: 23%;
+  background: white;
+}
+
+.friend{
+  font-family: $header-font;
+  margin: 8px 8px 8px 0;
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+
+.friend{
+  margin-right: 0;
+  font-size: 20px;
+  padding: 10px 20px;
+}
+
+.friend:hover{
+  background: #E7EAE9;
+}
