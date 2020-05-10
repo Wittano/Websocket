@@ -13,7 +13,7 @@ services:
     ports:
     - 6033:3306
   spring-boot:
-    build: '.'
+    build: .
     expose:
       - 8080
     ports:
@@ -22,3 +22,14 @@ services:
       WAIT_HOSTS: mysql:3306
     depends_on:
       - db
+  angular:
+    build: angular/
+    container_name: chatApp
+    volumes: 
+      - ./angular:/usr/src/angular
+    expose: 
+      - 4200
+    ports: 
+      - 4200:4200
+    depends_on: 
+      - spring-boot
