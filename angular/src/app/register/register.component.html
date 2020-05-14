@@ -1,0 +1,50 @@
+<a routerLink="/">Login</a>
+<div id="form">
+<app-form-input
+    [type]="'name'"
+    [placeholder]="'Username'"
+    [name]="'Username'"
+    [max]="30"
+    [min]="4"
+    [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,30}'"
+    (validResult)="nameValid($event)"
+    >
+</app-form-input>
+<app-form-input 
+        [type]="'password'"
+        [placeholder]="'Password'"
+        [name]="'Password'" 
+        [max]="60" 
+        [min]="4"
+        [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,60}'"
+        (validResult)="passwordValid($event)"></app-form-input>
+<app-form-input
+    [type]="'email'"
+    [placeholder]="'Email'"
+    [name]="'Email'"
+    [max]="200"
+    [min]="4"
+    [pattern]="regex"
+    (validResult)="emailValid($event)"></app-form-input>
+<div id="gender" [formGroup]="genderInputs">
+    <label for="female">Female</label>
+    <input 
+        class="checkbox" 
+        id="female" 
+        type="checkbox" 
+        formControlName="female" 
+        (input)="choiceGender('female')">
+    <label for="male">Male</label>
+    <input 
+        class="checkbox" 
+        id="male" 
+        type="checkbox" 
+        formControlName="male" 
+        (input)="choiceGender('male')">
+</div>
+<div id="date">
+    <label for="brithday">Birthday: </label>
+    <input id="brithday" type="date">
+</div>
+<button [disabled]="!(nameCorrect && passwordCorrect && emailCorrect)">Register</button>
+</div>

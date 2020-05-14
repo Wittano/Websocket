@@ -3,5 +3,7 @@
 <div *ngIf='input.invalid' class="error-msg">
     <p *ngIf="input.errors.minlength">{{ name }} is too short</p>
     <p *ngIf="input.errors.maxlength">{{ name }} is too long</p>
-    <p *ngIf="input.errors.pattern && !input.errors.minlength">{{ name }} has illegal character</p>
+    <p *ngIf="!input.errors.minlength && (input.errors.pattern && !validEmail)">
+        {{ name }} isn't correct
+    </p>
 </div>

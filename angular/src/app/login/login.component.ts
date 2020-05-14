@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { Login } from '../interface/Login';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements Login {
 
   nameCorrect: boolean;
   passwordCorrect: boolean

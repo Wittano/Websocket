@@ -18,6 +18,7 @@ export class FormInputComponent implements OnInit {
   @Output() validResult: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   input: FormControl;
+  validEmail: boolean;
 
   constructor() {
   }
@@ -32,7 +33,15 @@ export class FormInputComponent implements OnInit {
   }
 
   valid(): void{
-    this.validResult.emit(this.input.valid);
+    // This code exist because I didn't know why Validations.patter(this.pattern) didn't work. 
+    // In future I may add better validation or will find out how dose it work
+    if(this.type.toLowerCase() == 'email'){
+      const regex: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      this.validEmail = regex.test(this.input.value);
+      this.validResult.emit(this.validEmail);
+    }
+    else{
+      this.validResult.emit(this.input.valid);
+    }
   }
-
 }
