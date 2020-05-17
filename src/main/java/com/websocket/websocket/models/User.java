@@ -19,6 +19,14 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    public User() {
+    }
+
+    public User(@NotNull String username, @NotNull String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public long getId() {
         return id;
     }

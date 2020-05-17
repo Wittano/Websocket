@@ -2,36 +2,46 @@ package com.websocket.websocket.controller;
 
 import com.websocket.websocket.interfaces.service.UsersService;
 import com.websocket.websocket.models.UserDB;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 public class UserController {
 
-    private UsersService usersService;
+    private final UsersService usersService;
 
     public UserController(UsersService usersService) {
         this.usersService = usersService;
     }
 
+    @GetMapping("/user/{name}")
+    public UserDB getUser(@PathVariable("name") String name){
+        return usersService.getUserByName(name);
+    }
+
     @PostMapping("/user")
-    public String register(@Valid @ModelAttribute UserDB userDB, BindingResult result){
-        if(result.hasErrors()) {
-            return "register";
+    public UserDB register(@Valid @ModelAttribute UserDB userDB, BindingResult result){
+        if(result.hasErrors()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User wasn't found");
         }
 
         usersService.save(userDB);
 
-        return "redirect:/";
+        return userDB;
+    }
+
+    @PutMapping("/user/{user}/{update}")
+    public void updateUser(@PathVariable("user") UserDB user,
+                             @PathVariable("update") UserDB update){
+        usersService.update(user, update);
     }
 
     @DeleteMapping("/user/{name}")
-    public String deleteUser(@PathVariable("name") String name){
+    public void deleteUser(@PathVariable("name") String name){
         usersService.delete(name);
-
-        return "index";
     }
 }
