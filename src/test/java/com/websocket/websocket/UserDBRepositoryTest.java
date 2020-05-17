@@ -15,13 +15,14 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @SpringBootTest
 public class UserDBRepositoryTest {
 
     @Autowired
-    private UserRepository<UserDB, Long> repository;
-    private UserDB testUserDB;
+    private UserRepository<UserDB> repository;
+    private final UserDB testUserDB;
 
     public UserDBRepositoryTest() {
         testUserDB = new UserDB();
@@ -67,14 +68,14 @@ public class UserDBRepositoryTest {
             return;
         }
 
-        List<UserDB> userDBS = repository.findAll();
+        Set<UserDB> userDBS = repository.findAll();
         try {
             repository.save(testUserDB);
         } catch (SQLIntegrityConstraintViolationException | UserDuplicateException e) {
             return;
         }
 
-        List<UserDB> newUserDBList = repository.findAll();
+        Set<UserDB> newUserDBList = repository.findAll();
 
         Assertions.assertEquals(userDBS.size() + 1, newUserDBList.size());
     }
@@ -85,10 +86,10 @@ public class UserDBRepositoryTest {
             add_new_user();
         }
 
-        List<UserDB> userDBS = repository.findAll();
+        Set<UserDB> userDBS = repository.findAll();
         repository.deleteByName(testUserDB.getUsername());
 
-        List<UserDB> newUserDBS = repository.findAll();
+        Set<UserDB> newUserDBS = repository.findAll();
 
         Assertions.assertNotEquals(userDBS.size(), newUserDBS.size());
     }
