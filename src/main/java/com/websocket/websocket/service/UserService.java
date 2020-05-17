@@ -15,30 +15,25 @@ import java.util.Optional;
 @Service
 public class UserService implements UsersService {
 
-    private UserRepository<UserDB, Long> repo;
+    private final UserRepository<UserDB> repo;
+    private final PasswordEncoder passwordEncoder;
 
-    private PasswordEncoder passwordEncoder;
-
-    public UserService(PasswordEncoder passwordEncoder, UserRepository<UserDB, Long> repo) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository<UserDB> repo) {
         this.passwordEncoder = passwordEncoder;
 
         this.repo = repo;
     }
 
     @Override
-    public boolean isUserExist(UserDB userDB) {
-        return true;
+    public UserDB getUserByName(String name) {
+        return repo.findByName(name).orElseThrow(() -> {
+            throw new UsernameNotFoundException(String.format("%s not found", name));
+        });
     }
 
     @Override
-    public boolean userVerify(UserDB userDB) throws UsernameNotFoundException {
-        if(!isUserExist(userDB)){
-            throw new UsernameNotFoundException(String.format("User %s wasn't found", userDB.getUsername()));
-        }
-
-        Optional<UserDB> dbUser = repo.findByName(userDB.getUsername());
-
-        return dbUser.filter(value -> passwordEncoder.matches(userDB.getPassword(), value.getPassword())).isPresent();
+    public boolean isUserExist(UserDB userDB) {
+        return true;
     }
 
     @Override

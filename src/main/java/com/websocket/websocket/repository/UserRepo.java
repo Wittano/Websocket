@@ -8,12 +8,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
-public class UserRepo implements UserRepository<UserDB, Long> {
+public class UserRepo implements UserRepository<UserDB> {
 
     private final EntityManager entityManager;
 
@@ -32,8 +30,9 @@ public class UserRepo implements UserRepository<UserDB, Long> {
     }
 
     @Override
-    public List<UserDB> findAll() {
-        return entityManager.createQuery("from UserDB u").getResultList();
+    public Set<UserDB> findAll() {
+        List<UserDB> resultList = entityManager.createQuery("from UserDB u").getResultList();
+        return new HashSet<UserDB>(resultList);
     }
 
     @Override
