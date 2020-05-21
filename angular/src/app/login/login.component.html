@@ -22,6 +22,9 @@
   (inputValue)="getPassword($event)"
 >
 </app-form-input>
+<div *ngIf="errorMessage != ''">
+  <p>{{ errorMessage }}</p>
+</div>
 <button
   (click)="login()"
   class="button"

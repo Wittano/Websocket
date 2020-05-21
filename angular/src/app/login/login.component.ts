@@ -1,21 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Login } from '../interface/Login';
 import { Router } from '@angular/router';
+import { UserService } from '../service/user.service';
+import { ErrorService } from '../service/error.service';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements Login {
+export class LoginComponent implements Login, OnInit {
   nameCorrect: boolean;
   passwordCorrect: boolean;
   username: string;
   password: string;
-  errormsg: string;
+  errorMessage: string;
 
-  constructor(private router: Router) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private errorSevice: ErrorService
+  ) {
     this.nameCorrect = true;
+  }
+
+  ngOnInit() {
+    this.errorSevice.errorMessage.subscribe((error: string) => {
+      this.errorMessage = error;
+    });
   }
 
   nameValid($event: boolean) {
@@ -35,37 +48,6 @@ export class LoginComponent implements Login {
   }
 
   login(): void {
-    fetch('http://localhost:8080/authenticate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: this.username,
-        password: this.password
-      })
-    })
-      .then((value: Response) => {
-        if (value.status >= 300) {
-          throw new Error('Invalid login or password');
-        }
-
-        return value.text();
-      })
-      .then(text => {
-        localStorage.setItem('token', text);
-      })
-      .catch(err => {
-        if (localStorage.getItem('token')) {
-          localStorage.clear();
-        }
-
-        console.error(err);
-        return '';
-      });
-
-    if (localStorage.getItem('token')) {
-      this.router.navigate(['main']);
-    }
+    this.userService.authoriaztion(new User(this.username, this.password));
   }
 }
