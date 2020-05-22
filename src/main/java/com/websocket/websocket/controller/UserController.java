@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin
 public class UserController {
 
     private final UsersService usersService;
@@ -24,9 +25,9 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public UserDB register(@Valid @ModelAttribute UserDB userDB, BindingResult result){
+    public UserDB register(@Valid @RequestBody UserDB userDB, BindingResult result){
         if(result.hasErrors()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User wasn't found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid data");
         }
 
         usersService.save(userDB);

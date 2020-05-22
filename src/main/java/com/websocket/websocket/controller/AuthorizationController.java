@@ -36,7 +36,7 @@ public class AuthorizationController {
     public ResponseEntity<?> generateToken(@RequestBody JwtRequest request){
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    request. getUsername(),
+                    request.getUsername(),
                     request.getPassword(),
                     Collections.singleton(new SimpleGrantedAuthority("USER"))));
 
