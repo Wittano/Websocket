@@ -13,6 +13,7 @@ services:
     ports:
     - 6033:3306
   spring-boot:
+    container_name: api
     build: .
     expose:
       - 8080

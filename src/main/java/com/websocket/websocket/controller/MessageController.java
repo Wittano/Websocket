@@ -1,16 +1,24 @@
 package com.websocket.websocket.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.websocket.websocket.models.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/message")
+@CrossOrigin
 public class MessageController {
 
-    @GetMapping("")
-    public String hello(){
-        return "Test";
+    private final SimpMessagingTemplate template;
+
+    public MessageController(SimpMessagingTemplate template) {
+        this.template = template;
     }
 
+    @PostMapping("/send")
+    public void send(@RequestBody Message message){
+        template.convertAndSend("/chat/test", message);
+    }
 }

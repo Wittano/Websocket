@@ -61,12 +61,6 @@
 			<version>8.0.19</version>
 			<scope>runtime</scope>
 		</dependency>
-<!--		Commons-dbcp-->
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		</dependency>
 <!--        Hibernate core-->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -85,6 +79,17 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
+		</dependency>
+<!--		Spring boot websocket-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+<!--        Json lib-->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20200518</version>
 		</dependency>
 	</dependencies>
 
