@@ -1,3 +1,6 @@
 <button (click)="logout()">Logout</button>
 <h1>Witaj {{ username }}</h1>
-<div></div>
+<div id="chat">
+  <app-message [message]="message"></app-message>
+</div>
+<button (click)="sendMessage()">Send</button>
