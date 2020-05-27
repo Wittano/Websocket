@@ -1,5 +1,10 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { UserService } from '../service/user.service';
 import * as jwtToken from 'jwt-decode';
 import { JwtToken } from '../models/jwt-token';
@@ -10,44 +15,43 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomePageComponent implements AfterViewInit {
+export class HomePageComponent implements AfterViewInit, OnDestroy {
   username: string;
-  message: Message;
   messageInput: FormControl;
+  selectedFriend: string;
+  messageList: Array<Message>;
+  friendList: Array<string>;
 
   constructor(
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private changeDetection: ChangeDetectorRef
   ) {
     const token: string = localStorage.getItem('token');
     const decodeToken: JwtToken = jwtToken<JwtToken>(token);
 
-    this.message = new Message('root', 'bob', 'Hello Bob', new Date());
-
-    messageService.subscribe('root', 'bob', (msg: Message) => {
-      console.log(msg);
-    });
-
+    this.messageList = new Array<Message>();
+    this.friendList = new Array<string>('bob');
     this.username = decodeToken.sub;
+    this.messageInput = new FormControl('');
   }
 
   ngAfterViewInit() {
     this.tokenExpired();
   }
 
-  private isSessionEnd(token: string | null): boolean {
-    const expired =
-      token != null ? new Date(jwtToken<JwtToken>(token).exp) : null;
-
-    return (
-      token != null && expired != null && this.afterDate(new Date(), expired)
-    );
+  ngOnDestroy() {
+    this.messageService.disconnect();
   }
 
-  private afterDate(date: Date, afterDate: Date): boolean {
-    return afterDate > date;
+  private isSessionEnd(token: string | null): boolean {
+    const expired: Date | null =
+      token != null ? new Date(jwtToken<JwtToken>(token).exp) : null;
+
+    return token != null && expired != null && expired > new Date();
   }
 
   private tokenExpired(): void {
@@ -55,6 +59,17 @@ export class HomePageComponent implements AfterViewInit {
     if (this.isSessionEnd(token)) {
       this.logout();
     }
+  }
+
+  private subscribe(): void {
+    this.messageService.subscribe(
+      this.username,
+      this.selectedFriend,
+      (msg: Message) => {
+        this.messageList.push(msg);
+        this.changeDetection.detectChanges();
+      }
+    );
   }
 
   logout() {
@@ -66,11 +81,18 @@ export class HomePageComponent implements AfterViewInit {
 
     const message: Message = new Message(
       this.username,
-      'root',
-      null,
+      this.selectedFriend,
+      this.messageInput.value,
       new Date()
     );
 
     this.messageService.sendMessage(message);
+    this.messageList.push(message);
+    this.changeDetection.detectChanges();
+  }
+
+  selectFriend($event) {
+    this.selectFriend = $event.target.innerHTML;
+    this.subscribe();
   }
 }

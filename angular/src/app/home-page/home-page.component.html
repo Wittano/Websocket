@@ -1,8 +1,24 @@
 <button (click)="logout()">Logout</button>
-<h1>Witaj {{ username }}</h1>
-<label for="message">Message: </label>
-<input id="message" type="text" placeholder="Send a message" />
-<div id="chat">
-  <app-message [message]="message"></app-message>
+<h1>Welcome {{ username }}</h1>
+<div>
+  <label for="message">Message: </label>
+  <input
+    id="message"
+    type="text"
+    [formControl]="messageInput"
+    placeholder="Send a message"
+  />
+  <button (click)="sendMessage()">Send</button>
 </div>
-<button (click)="sendMessage()">Send</button>
+<div id="friend-list">
+  <p *ngFor="let friend of friendList" (click)="selectFriend($event)">
+    {{ friend }}
+  </p>
+</div>
+
+<div id="chat">
+  <app-message
+    *ngFor="let message of messageList"
+    [message]="message"
+  ></app-message>
+</div>

@@ -4,7 +4,12 @@ export class Message {
   from: string;
   to: string;
 
-  constructor(from: string, to: string, content: string, date: Date) {
+  constructor(
+    from: string,
+    to: string,
+    content: string,
+    date: Date = new Date()
+  ) {
     this.from = from;
     this.to = to;
     this.content = content;
