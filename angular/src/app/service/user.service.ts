@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class UserService {
   private apiUrl: string;
 
-  constructor(private errorSevice: ErrorService, private router: Router) {
+  constructor(private errorService: ErrorService, private router: Router) {
     this.apiUrl = 'http://localhost:8080';
   }
 
@@ -36,7 +36,7 @@ export class UserService {
         this.router.navigate(['home']);
       })
       .catch((err: Error) => {
-        this.errorSevice.changeErrorMessage(err.message);
+        this.errorService.changeErrorMessage(err.message);
       });
   }
 
