@@ -1,6 +1,7 @@
 package com.websocket.websocket.models;
 
 import com.websocket.websocket.interfaces.Model;
+import org.springframework.data.annotation.Reference;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -26,13 +27,13 @@ public class UserDB implements Serializable, Model<UserDB>, Cloneable {
     }
 
     @NotNull
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "id", unique = true, nullable = false)
     private long id;
 
     @NotNull
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "username")
     private String username;
 
     @NotNull

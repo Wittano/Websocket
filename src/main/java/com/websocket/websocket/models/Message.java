@@ -1,18 +1,40 @@
 package com.websocket.websocket.models;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "messages")
 public class Message {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private long id;
+    @Column(name = "message_from", updatable = false)
     private String from;
+    @Column(name = "message_to", updatable = false)
     private String to;
+    @Column(name = "content")
     private String content;
+    @Column(name = "date")
+    private Date date = new Date();
 
     public Message() {
     }
 
-    public Message(String from, String to, String content) {
+    public Message(String from, String to, String content, Date date) {
         this.from = from;
         this.to = to;
         this.content = content;
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getFrom() {
