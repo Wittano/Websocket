@@ -16,21 +16,19 @@ export class MessageService {
     this.stompClient = Client('ws://localhost:8080/message');
   }
 
-  private connect() {}
-
-  subscribe(from: string, to: string, callback: (message: Message) => void) {
+  disconnect() {
     if (this.stompClient.connected) {
       this.stompClient.disconnect(() => {});
-    } else {
-      this.stompClient.connect({}, () => {
-        this.stompClient.subscribe(
-          `/chat/${from}-${to}`,
-          (msg: StompMessage) => {
-            callback(JSON.parse(msg.body));
-          }
-        );
-      });
     }
+  }
+
+  subscribe(from: string, to: string, callback: (message: Message) => void) {
+    this.disconnect();
+    this.stompClient.connect({}, () => {
+      this.stompClient.subscribe(`/chat/${from}-${to}`, (msg: StompMessage) => {
+        callback(JSON.parse(msg.body));
+      });
+    });
   }
 
   sendMessage(message: Message): void {
