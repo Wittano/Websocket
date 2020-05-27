@@ -87,12 +87,12 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
     );
 
     this.messageService.sendMessage(message);
-    this.messageList.push(message);
-    this.changeDetection.detectChanges();
   }
 
-  selectFriend($event) {
-    this.selectFriend = $event.target.innerHTML;
+  async selectFriend($event) {
+    this.selectedFriend = $event.target.innerHTML.trim();
     this.subscribe();
+    this.messageList = await this.messageService.getCorrespondence(this.username, this.selectedFriend);
+    this.changeDetection.detectChanges();
   }
 }
