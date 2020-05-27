@@ -1,16 +1,13 @@
 package com.websocket.websocket.service;
 
-import com.websocket.websocket.exception.UserDuplicateException;
+import com.websocket.websocket.interfaces.UserRepository;
 import com.websocket.websocket.interfaces.service.UsersService;
 import com.websocket.websocket.models.UserDB;
-import com.websocket.websocket.interfaces.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Optional;
 
 @Service
 public class UserService implements UsersService {
@@ -20,7 +17,6 @@ public class UserService implements UsersService {
 
     public UserService(PasswordEncoder passwordEncoder, UserRepository<UserDB> repo) {
         this.passwordEncoder = passwordEncoder;
-
         this.repo = repo;
     }
 
@@ -32,22 +28,13 @@ public class UserService implements UsersService {
     }
 
     @Override
-    public boolean isUserExist(UserDB userDB) {
-        return true;
-    }
-
-    @Override
     public void save(UserDB userDB) {
         userDB.setPassword(passwordEncoder.encode(userDB.getPassword()));
-        try {
-            repo.save(userDB);
-        } catch (SQLIntegrityConstraintViolationException | UserDuplicateException e) {
-            e.printStackTrace();
-        }
+        repo.save(userDB);
     }
 
     @Override
-    public void update(@NotNull UserDB target, UserDB update) {
+    public void update(UserDB target, UserDB update) {
         repo.update(target, update);
     }
 

@@ -1,6 +1,5 @@
 package com.websocket.websocket.repository;
 
-import com.websocket.websocket.exception.UserDuplicateException;
 import com.websocket.websocket.interfaces.UserRepository;
 import com.websocket.websocket.models.UserDB;
 import org.springframework.stereotype.Repository;
@@ -21,51 +20,45 @@ public class UserRepo implements UserRepository<UserDB> {
 
     @Override
     public Optional<UserDB> findByName(String name) {
-        if(!isExistByName(name)){
+        try{
+            return Optional.of((UserDB) entityManager.createQuery("from UserDB u where u.username = :username").
+                    setParameter("username", name).getSingleResult());
+        } catch (NoResultException e){
             return Optional.empty();
         }
-
-        return Optional.of((UserDB) entityManager.createQuery("from UserDB u where u.username = :username").
-                setParameter("username", name).getSingleResult());
     }
 
     @Override
     public Set<UserDB> findAll() {
         List<UserDB> resultList = entityManager.createQuery("from UserDB u").getResultList();
-        return new HashSet<UserDB>(resultList);
+        return new HashSet<>(resultList);
     }
 
     @Override
     @Transactional
-    public void save(UserDB object) throws UserDuplicateException {
-        if(isExistByName(object.getUsername())) {
-            throw new UserDuplicateException("You can't save this user cause he's exist in database");
-        }
+    public void save(UserDB object) {
         entityManager.persist(object);
     }
 
     @Override
     @Transactional
     public void deleteByName(String name) {
-        Optional<UserDB> userOptional = findByName(name);
-        if(userOptional.isPresent()){
-            UserDB userDB = userOptional.get();
-
-            entityManager.remove(userDB);
-        }
-        else {
+        UserDB userDB = findByName(name).orElseThrow(() -> {
             throw new NoSuchElementException(String.format("User %s wasn't found!", name));
-        }
+        });
+
+        entityManager.remove(userDB);
     }
 
     @Override
     public boolean isExistByName(String name) {
         try {
-            UserDB userDB = (UserDB) entityManager.createQuery("from UserDB u where u.username = :name").
-                    setParameter("name", name).getSingleResult();
+            UserDB userDB = findByName(name).orElseThrow(() -> {
+                throw new NoResultException();
+            });
 
             return userDB.getUsername().equals(name);
-        } catch (NoResultException e){
+        } catch (NoResultException e) {
             return false;
         }
     }
