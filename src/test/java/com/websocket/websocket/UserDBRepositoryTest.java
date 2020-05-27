@@ -69,11 +69,7 @@ public class UserDBRepositoryTest {
         }
 
         Set<UserDB> userDBS = repository.findAll();
-        try {
-            repository.save(testUserDB);
-        } catch (SQLIntegrityConstraintViolationException | UserDuplicateException e) {
-            return;
-        }
+        repository.save(testUserDB);
 
         Set<UserDB> newUserDBList = repository.findAll();
 
