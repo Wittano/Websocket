@@ -68,7 +68,10 @@ export class UserService {
   }
 
   logout() {
-    localStorage.removeItem('token');
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+    }
+
     this.router.navigate(['']);
   }
 }

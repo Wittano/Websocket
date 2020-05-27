@@ -4,8 +4,8 @@ import { UserService } from '../service/user.service';
 import * as jwtToken from 'jwt-decode';
 import { JwtToken } from '../models/jwt-token';
 import { Message } from '../models/message';
-import {Client, Message as StompMessage, client as StompClient} from "stompjs";
-
+import { MessageService } from '../service/message-service.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home-page',
@@ -13,23 +13,21 @@ import {Client, Message as StompMessage, client as StompClient} from "stompjs";
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements AfterViewInit {
-  private stompClient: Client;
-
   username: string;
   message: Message;
+  messageInput: FormControl;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private messageService: MessageService
+  ) {
     const token: string = localStorage.getItem('token');
     const decodeToken: JwtToken = jwtToken<JwtToken>(token);
 
     this.message = new Message('root', 'bob', 'Hello Bob', new Date());
 
-    this.stompClient = StompClient("ws://localhost:8080/message");
-    this.stompClient.connect({}, () => {
-      this.stompClient.subscribe("/chat/test", (msg: StompMessage) => {
-        console.log(msg.body);
-        this.message = JSON.parse(msg.body);
-      });
+    messageService.subscribe('root', 'bob', (msg: Message) => {
+      console.log(msg);
     });
 
     this.username = decodeToken.sub;
@@ -39,18 +37,22 @@ export class HomePageComponent implements AfterViewInit {
     this.tokenExpired();
   }
 
-  private static isSessionEnd(token: string | null): boolean{
-    const expired = token != null ? new Date(jwtToken<JwtToken>(token).exp) : null;
-    return token != null && expired != null && HomePageComponent.afterDate(new Date(), expired);
+  private isSessionEnd(token: string | null): boolean {
+    const expired =
+      token != null ? new Date(jwtToken<JwtToken>(token).exp) : null;
+
+    return (
+      token != null && expired != null && this.afterDate(new Date(), expired)
+    );
   }
 
-  private static afterDate(date: Date, afterDate: Date): boolean{
+  private afterDate(date: Date, afterDate: Date): boolean {
     return afterDate > date;
   }
 
-  private tokenExpired(): void{
+  private tokenExpired(): void {
     const token: string | null = localStorage.getItem('token');
-    if (HomePageComponent.isSessionEnd(token)) {
+    if (this.isSessionEnd(token)) {
       this.logout();
     }
   }
@@ -61,20 +63,14 @@ export class HomePageComponent implements AfterViewInit {
 
   sendMessage() {
     this.tokenExpired();
-    const msg = JSON.stringify({
-      from: 'root',
-      to: 'bober',
-      content: 'Hi Mark!'
-    });
-    fetch('http://localhost:8080/send', {
-      method: 'POST',
-      body: msg,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:8080'
-      },
-    }).catch((err: Error) => {
-      console.log(err.message);
-    });
+
+    const message: Message = new Message(
+      this.username,
+      'root',
+      null,
+      new Date()
+    );
+
+    this.messageService.sendMessage(message);
   }
 }

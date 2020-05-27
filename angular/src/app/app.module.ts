@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormInputComponent } from './form-input/form-input.component';
 import { RegisterComponent } from './register/register.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
   declarations: [
@@ -16,13 +17,10 @@ import { HomePageComponent } from './home-page/home-page.component';
     FormInputComponent,
     RegisterComponent,
     HomePageComponent,
+    MessageComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
