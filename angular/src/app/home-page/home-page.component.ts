@@ -1,16 +1,10 @@
-import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
-} from '@angular/core';
-import { UserService } from '../service/user.service';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {UserService} from '../service/user.service';
 import * as jwtToken from 'jwt-decode';
-import { JwtToken } from '../models/jwt-token';
-import { Message } from '../models/message';
-import { MessageService } from '../service/message-service.service';
-import { FormControl } from '@angular/forms';
+import {JwtToken} from '../models/jwt-token';
+import {Message} from '../models/message';
+import {MessageService} from '../service/message-service.service';
+import {FormControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-home-page',
@@ -24,6 +18,9 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
   selectedFriend: string;
   messageList: Array<Message>;
   friendList: Array<string>;
+  searchFriend: string;
+  searchFriendInput: FormControl;
+  disable: boolean;
 
   constructor(
     private userService: UserService,
@@ -37,6 +34,11 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
     this.friendList = new Array<string>('bob');
     this.username = decodeToken.sub;
     this.messageInput = new FormControl('');
+    this.searchFriendInput = new FormControl('', [
+      Validators.minLength(4),
+      Validators.required
+    ]);
+    this.disable = true;
   }
 
   ngAfterViewInit() {
@@ -45,6 +47,43 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.messageService.disconnect();
+  }
+
+  logout() {
+    this.userService.logout();
+  }
+
+  sendMessage() {
+    this.tokenExpired();
+
+    const message: Message = new Message(
+      this.username,
+      this.selectedFriend,
+      this.messageInput.value,
+      new Date()
+    );
+
+    this.messageService.sendMessage(message);
+  }
+
+  async selectFriend($event) {
+    this.selectedFriend = $event.target.innerHTML.trim();
+    this.subscribe();
+    this.messageList = await this.messageService.getCorrespondence(this.username, this.selectedFriend);
+    this.changeDetection.detectChanges();
+  }
+
+  setSearchFriend() {
+    this.searchFriend = this.searchFriendInput.value;
+    this.disable = !this.searchFriendInput.valid;
+  }
+
+  addFriend() {
+
+  }
+
+  removeFriend() {
+
   }
 
   private isSessionEnd(token: string | null): boolean {
@@ -70,29 +109,5 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
         this.changeDetection.detectChanges();
       }
     );
-  }
-
-  logout() {
-    this.userService.logout();
-  }
-
-  sendMessage() {
-    this.tokenExpired();
-
-    const message: Message = new Message(
-      this.username,
-      this.selectedFriend,
-      this.messageInput.value,
-      new Date()
-    );
-
-    this.messageService.sendMessage(message);
-  }
-
-  async selectFriend($event) {
-    this.selectedFriend = $event.target.innerHTML.trim();
-    this.subscribe();
-    this.messageList = await this.messageService.getCorrespondence(this.username, this.selectedFriend);
-    this.changeDetection.detectChanges();
   }
 }
