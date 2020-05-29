@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Login } from '../interface/Login';
-import { Router } from '@angular/router';
-import { UserService } from '../service/user.service';
-import { ErrorService } from '../service/error.service';
-import { User } from '../models/user';
+import {Component, OnInit} from '@angular/core';
+import {Login} from '../interface/Login';
+import {Router} from '@angular/router';
+import {UserService} from '../service/user.service';
+import {ErrorService} from '../service/error.service';
+import {User} from '../models/user';
 
 @Component({
   selector: 'app-login',
@@ -20,13 +20,14 @@ export class LoginComponent implements Login, OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private errorSevice: ErrorService
+    private errorService: ErrorService
   ) {
     this.nameCorrect = true;
   }
 
   ngOnInit() {
-    this.errorSevice.errorMessage.subscribe((error: string) => {
+    this.errorMessage = '';
+    this.errorService.errorMessage.subscribe((error: string) => {
       this.errorMessage = error;
     });
   }
@@ -48,6 +49,6 @@ export class LoginComponent implements Login, OnInit {
   }
 
   login(): void {
-    this.userService.authoriaztion(new User(this.username, this.password));
+    this.userService.authorization(new User(this.username, this.password));
   }
 }
