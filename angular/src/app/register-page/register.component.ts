@@ -3,6 +3,7 @@ import { Login } from '../interface/Login';
 import { FormGroup, FormControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
 import { User } from '../models/user';
+import {ErrorService} from "../service/error.service";
 
 @Component({
   selector: 'app-register',
@@ -24,8 +25,13 @@ export class RegisterComponent implements Login {
   });
 
   regex = `^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`;
+  errorMsg: string;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private errorService: ErrorService) {
+    this.errorService.errorMessage.subscribe(((value: string) => {
+      this.errorMsg = value;
+    }))
+  }
 
   choiceGender(gender: string) {
     const unchecked = (element: HTMLInputElement) => {
@@ -68,6 +74,7 @@ export class RegisterComponent implements Login {
   register() {
     const birthday: HTMLInputElement = document.querySelector('#brithday');
 
+    this.errorService.changeErrorMessage('');
     this.userService.register(
       new User(
         this.name,

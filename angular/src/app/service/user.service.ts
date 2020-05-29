@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { User } from '../models/user';
-import { ErrorService } from './error.service';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {User} from '../models/user';
+import {ErrorService} from './error.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class UserService {
     this.apiUrl = 'http://localhost:8080';
   }
 
-  authoriaztion(user: User) {
+  authorization(user: User) {
     fetch(`${this.apiUrl}/authenticate`, {
       method: 'POST',
       headers: {
@@ -33,6 +33,7 @@ export class UserService {
       })
       .then(text => {
         localStorage.setItem('token', text);
+        this.errorService.changeErrorMessage(null);
         this.router.navigate(['home']);
       })
       .catch((err: Error) => {
@@ -41,7 +42,6 @@ export class UserService {
   }
 
   register(user: User) {
-    console.log(user);
     fetch(`${this.apiUrl}/user`, {
       method: 'POST',
       headers: {
@@ -55,15 +55,15 @@ export class UserService {
         birthday: user.birthday
       })
     })
-      .then((respone: Response) => {
+      .then(async (respone: Response) => {
         if (respone.status > 300) {
-          throw new Error('Invalid date');
+          throw new Error(await respone.text());
         }
 
-        this.router.navigate(['']);
+        await this.router.navigate(['']);
       })
       .catch((err: Error) => {
-        console.error(err.message);
+        this.errorService.changeErrorMessage(err.message);
       });
   }
 
