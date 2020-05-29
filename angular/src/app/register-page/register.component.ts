@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Login } from '../interface/Login';
-import { FormGroup, FormControl } from '@angular/forms';
-import { UserService } from '../service/user.service';
-import { User } from '../models/user';
+import {Component, OnInit} from '@angular/core';
+import {Login} from '../interface/Login';
+import {FormControl, FormGroup} from '@angular/forms';
+import {UserService} from '../service/user.service';
+import {User} from '../models/user';
 import {ErrorService} from "../service/error.service";
 
 @Component({
@@ -10,7 +10,7 @@ import {ErrorService} from "../service/error.service";
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements Login {
+export class RegisterComponent implements Login, OnInit {
   nameCorrect: boolean;
   passwordCorrect: boolean;
   emailCorrect: boolean;
@@ -31,6 +31,10 @@ export class RegisterComponent implements Login {
     this.errorService.errorMessage.subscribe(((value: string) => {
       this.errorMsg = value;
     }))
+  }
+
+  ngOnInit() {
+    this.errorService.changeErrorMessage('');
   }
 
   choiceGender(gender: string) {
