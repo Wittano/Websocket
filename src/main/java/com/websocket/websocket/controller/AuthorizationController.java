@@ -20,9 +20,9 @@ import java.util.Collections;
 @CrossOrigin
 public class AuthorizationController {
 
-    private AuthenticationManager manager;
-    private JwtToken jwtToken;
-    private UserDetailsService service;
+    private final AuthenticationManager manager;
+    private final JwtToken jwtToken;
+    private final UserDetailsService service;
 
     public AuthorizationController(AuthenticationManager manager,
                                    JwtToken jwtToken,
@@ -33,12 +33,12 @@ public class AuthorizationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> generateToken(@RequestBody JwtRequest request){
+    public ResponseEntity<?> generateToken(@RequestBody JwtRequest request) {
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
-                    request.getPassword(),
-                    Collections.singleton(new SimpleGrantedAuthority("USER"))));
+                        request.getUsername(),
+                        request.getPassword(),
+                        Collections.singleton(new SimpleGrantedAuthority("USER"))));
 
         UserDetails user = service.loadUserByUsername(request.getUsername());
         String token = jwtToken.createToken(user);

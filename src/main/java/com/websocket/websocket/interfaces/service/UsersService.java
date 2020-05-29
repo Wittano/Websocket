@@ -1,11 +1,13 @@
 package com.websocket.websocket.interfaces.service;
 
-import com.websocket.websocket.models.UserDB;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.websocket.websocket.models.User;
 
 public interface UsersService {
-    UserDB getUserByName(String name);
-    void save(UserDB userDB);
-    void update(UserDB target, UserDB update);
+    User getUserByName(String name);
+
+    void save(User userDB);
+
+    void update(User target, User update);
+
     void delete(String name);
 }

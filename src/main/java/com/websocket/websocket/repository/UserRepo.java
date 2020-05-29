@@ -1,7 +1,7 @@
 package com.websocket.websocket.repository;
 
 import com.websocket.websocket.interfaces.UserRepository;
-import com.websocket.websocket.models.UserDB;
+import com.websocket.websocket.models.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Repository
-public class UserRepo implements UserRepository<UserDB> {
+public class UserRepo implements UserRepository<User> {
 
     private final EntityManager entityManager;
 
@@ -19,31 +19,31 @@ public class UserRepo implements UserRepository<UserDB> {
     }
 
     @Override
-    public Optional<UserDB> findByName(String name) {
-        try{
-            return Optional.of((UserDB) entityManager.createQuery("from UserDB u where u.username = :username").
+    public Optional<User> findByName(String name) {
+        try {
+            return Optional.of((User) entityManager.createQuery("from User u where u.username = :username").
                     setParameter("username", name).getSingleResult());
-        } catch (NoResultException e){
+        } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Set<UserDB> findAll() {
-        List<UserDB> resultList = entityManager.createQuery("from UserDB u").getResultList();
+    public Set<User> findAll() {
+        List<User> resultList = entityManager.createQuery("from User u").getResultList();
         return new HashSet<>(resultList);
     }
 
     @Override
     @Transactional
-    public void save(UserDB object) {
+    public void save(User object) {
         entityManager.persist(object);
     }
 
     @Override
     @Transactional
     public void deleteByName(String name) {
-        UserDB userDB = findByName(name).orElseThrow(() -> {
+        User userDB = findByName(name).orElseThrow(() -> {
             throw new NoSuchElementException(String.format("User %s wasn't found!", name));
         });
 
@@ -53,7 +53,7 @@ public class UserRepo implements UserRepository<UserDB> {
     @Override
     public boolean isExistByName(String name) {
         try {
-            UserDB userDB = findByName(name).orElseThrow(() -> {
+            User userDB = findByName(name).orElseThrow(() -> {
                 throw new NoResultException();
             });
 
@@ -65,7 +65,7 @@ public class UserRepo implements UserRepository<UserDB> {
 
     @Override
     @Transactional
-    public UserDB update(UserDB target, UserDB update) {
+    public User update(User target, User update) {
         target.merge(update);
         return target;
     }

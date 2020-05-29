@@ -1,7 +1,7 @@
 package com.websocket.websocket.controller;
 
 import com.websocket.websocket.interfaces.service.UsersService;
-import com.websocket.websocket.models.UserDB;
+import com.websocket.websocket.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +20,13 @@ public class UserController {
     }
 
     @GetMapping("/user/{name}")
-    public UserDB getUser(@PathVariable("name") String name){
+    public User getUser(@PathVariable("name") String name) {
         return usersService.getUserByName(name);
     }
 
     @PostMapping("/user")
-    public UserDB register(@Valid @RequestBody UserDB userDB, BindingResult result){
-        if(result.hasErrors()){
+    public User register(@Valid @RequestBody User userDB, BindingResult result) {
+        if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid data");
         }
 
@@ -36,13 +36,13 @@ public class UserController {
     }
 
     @PutMapping("/user/{user}/{update}")
-    public void updateUser(@PathVariable("user") UserDB user,
-                             @PathVariable("update") UserDB update){
+    public void updateUser(@PathVariable("user") User user,
+                           @PathVariable("update") User update) {
         usersService.update(user, update);
     }
 
     @DeleteMapping("/user/{name}")
-    public void deleteUser(@PathVariable("name") String name){
+    public void deleteUser(@PathVariable("name") String name) {
         usersService.delete(name);
     }
 }
