@@ -53,11 +53,11 @@ public class UserRepo implements UserRepository<User> {
     @Override
     public boolean isExistByName(String name) {
         try {
-            User userDB = findByName(name).orElseThrow(() -> {
+            findByName(name).orElseThrow(() -> {
                 throw new NoResultException();
             });
 
-            return userDB.getUsername().equals(name);
+            return true;
         } catch (NoResultException e) {
             return false;
         }
@@ -65,8 +65,11 @@ public class UserRepo implements UserRepository<User> {
 
     @Override
     @Transactional
-    public User update(User target, User update) {
+    public void update(User target, User update) {
+        if(target.equals(update)){
+           return;
+        }
         target.merge(update);
-        return target;
+        entityManager.merge(target);
     }
 }

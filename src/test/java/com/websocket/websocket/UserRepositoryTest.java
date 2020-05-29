@@ -5,15 +5,14 @@ import com.websocket.websocket.models.User;
 import org.assertj.core.util.Lists;
 import org.junit.After;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.*;
 
 @SpringBootTest
 public class UserRepositoryTest {
@@ -29,6 +28,19 @@ public class UserRepositoryTest {
         testUserDB.setBirthday(new Date(System.currentTimeMillis()));
         testUserDB.setEmail("test@test.com");
         testUserDB.setGender(User.Gender.Male);
+        testUserDB.setFriends(new HashSet<>());
+    }
+
+    @BeforeEach
+    public void removeTestUser(){
+        try{
+            repository.deleteByName("Bob the Builder");
+        } catch (Exception ignored){
+        }
+        try{
+            repository.deleteByName(testUserDB.getUsername());
+        } catch (Exception ignored){
+        }
     }
 
     @After
@@ -67,7 +79,12 @@ public class UserRepositoryTest {
         }
 
         Set<User> userDBS = repository.findAll();
-        repository.save(testUserDB);
+        try{
+            repository.save(testUserDB);
+        } catch (Exception e){
+            e.getStackTrace();
+            return;
+        }
 
         Set<User> newUserDBList = repository.findAll();
 
@@ -77,7 +94,7 @@ public class UserRepositoryTest {
     @Test
     public void delete_user() {
         if (!repository.isExistByName(testUserDB.getUsername())) {
-            add_new_user();
+            repository.save(testUserDB);
         }
 
         Set<User> userDBS = repository.findAll();
@@ -91,7 +108,7 @@ public class UserRepositoryTest {
     @Test
     public void search_user() {
         if (!repository.isExistByName(testUserDB.getUsername())) {
-            add_new_user();
+            repository.save(testUserDB);
         }
 
         Assertions.assertTrue(repository.findByName(testUserDB.getUsername()).isPresent());
@@ -108,6 +125,7 @@ public class UserRepositoryTest {
 
     @Test
     public void update_user() {
+        final String updateTestName = "Bob the builder";
         User copyTestUserDB = null;
         User testUserDB2 = null;
         try {
@@ -117,7 +135,7 @@ public class UserRepositoryTest {
             e.printStackTrace();
         }
 
-        Objects.requireNonNull(testUserDB2).setUsername("Bob the builder");
+        Objects.requireNonNull(testUserDB2).setUsername(updateTestName);
 
         copyTestUserDB.merge(testUserDB2);
 
@@ -125,15 +143,16 @@ public class UserRepositoryTest {
         Assertions.assertNotEquals(testUserDB2, testUserDB);
 
         if (!repository.isExistByName(testUserDB.getUsername())) {
-            add_new_user();
+            repository.save(testUserDB);
         }
 
         User userDBFromDatabase = repository.findByName(testUserDB.getUsername()).get();
 
         repository.update(userDBFromDatabase, copyTestUserDB);
 
-        User checkUserDBFromDatabase = repository.findByName(testUserDB.getUsername()).get();
+        User checkUserDBFromDatabase = repository.findByName(testUserDB.getUsername()).orElse(null);
 
-        Assertions.assertNotEquals(userDBFromDatabase, checkUserDBFromDatabase);
+        Assertions.assertNull(checkUserDBFromDatabase);
+        Assertions.assertEquals(userDBFromDatabase.getUsername(), updateTestName);
     }
 }

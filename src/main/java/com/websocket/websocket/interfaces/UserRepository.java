@@ -18,5 +18,5 @@ public interface UserRepository<T extends User> {
 
     boolean isExistByName(String name) throws EmptyResultDataAccessException;
 
-    User update(User target, User update);
+    void update(User target, User update);
 }

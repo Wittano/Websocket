@@ -1,6 +1,7 @@
 package com.websocket.websocket.models;
 
 import com.websocket.websocket.interfaces.Model;
+import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -8,7 +9,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -20,7 +23,7 @@ public class User implements Serializable, Model<User>, Cloneable {
     @Column(name = "id", unique = true, nullable = false)
     private long id;
     @NotNull
-    @Column(name = "username" ,unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
     @NotNull
     @Column(name = "password", nullable = false)
@@ -40,14 +43,31 @@ public class User implements Serializable, Model<User>, Cloneable {
     private boolean enabled = true;
     @Column(name = "role")
     private String role = "USER";
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "Friends", joinColumns = @JoinColumn(name = "username"))
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    @Column(name = "friends")
+    private Set<String> friends;
 
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(@NotNull long id,
+                @NotNull String username,
+                @NotNull String password,
+                @NotNull @Email String email,
+                @NotNull Gender gender,
+                Set<String> friends) {
+        this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.birthday = new Date();
+        this.gender = gender;
+        this.role = "USER";
+        this.friends = friends != null ? friends : new HashSet<>();
     }
+
 
     //#region Getters and Setters
     public long getId() {
@@ -114,6 +134,14 @@ public class User implements Serializable, Model<User>, Cloneable {
         this.role = role;
     }
 
+    public Set<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<String> friends) {
+        this.friends = friends;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -125,6 +153,7 @@ public class User implements Serializable, Model<User>, Cloneable {
                 ", gender=" + gender +
                 ", enabled=" + enabled +
                 ", role='" + role + '\'' +
+                ", friends=" + friends +
                 '}';
     }
 
@@ -133,15 +162,15 @@ public class User implements Serializable, Model<User>, Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User userDB = (User) o;
-        return id == userDB.id &&
-                username.equals(userDB.username) &&
-                password.equals(userDB.password) &&
-                email.equals(userDB.email) &&
-                Objects.equals(birthday, userDB.birthday) &&
-                gender == userDB.gender;
+        return this.id == userDB.id &&
+                this.username.equals(userDB.username) &&
+                this.password.equals(userDB.password) &&
+                this.email.equals(userDB.email) &&
+                this.birthday.equals(userDB.birthday) &&
+                this.gender.equals(userDB.gender) &&
+                this.friends.containsAll(userDB.friends) &&
+                this.friends.size() == userDB.friends.size();
     }
-
-//#endregion
 
     @Override
     public void merge(User mergeObject) {
@@ -150,8 +179,10 @@ public class User implements Serializable, Model<User>, Cloneable {
         this.email = !this.email.equals(mergeObject.getEmail()) ? mergeObject.getEmail() : this.email;
         this.birthday = !this.birthday.equals(mergeObject.getBirthday()) ? mergeObject.getBirthday() : this.birthday;
         this.gender = !this.gender.equals(mergeObject.getGender()) ? mergeObject.getGender() : this.gender;
+        this.friends = !this.friends.equals(mergeObject.getFriends()) ? mergeObject.getFriends() : this.friends;
     }
 
+    //#endregion
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();

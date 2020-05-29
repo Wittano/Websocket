@@ -1,22 +1,25 @@
 package com.websocket.websocket.controller;
 
+import com.websocket.websocket.interfaces.service.FriendService;
 import com.websocket.websocket.interfaces.service.UsersService;
 import com.websocket.websocket.models.User;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
 public class UserController {
 
     private final UsersService usersService;
+    private final FriendService friendService;
 
-    public UserController(UsersService usersService) {
+    public UserController(UsersService usersService, FriendService friendService) {
         this.usersService = usersService;
+        this.friendService = friendService;
     }
 
     @GetMapping("/user/{name}")
@@ -24,15 +27,36 @@ public class UserController {
         return usersService.getUserByName(name);
     }
 
+    @GetMapping("/friend/{user}")
+    public Set<String> getFriends(@PathVariable("user") String name) {
+        return friendService.getFriends(name);
+    }
+
+    @PostMapping("/friend/{who}/{friend}")
+    public void addFriend(@PathVariable("friend") String friend, @PathVariable("who") String name)
+            throws CloneNotSupportedException {
+        friendService.addFriend(name, friend);
+    }
+
+    @DeleteMapping("/friend/{who}/{friend}")
+    public void deleteFriend(@PathVariable("friend") String friend, @PathVariable("who") String who)
+            throws CloneNotSupportedException {
+        friendService.deleteFriend(who, friend);
+    }
+
     @PostMapping("/user")
-    public User register(@Valid @RequestBody User userDB, BindingResult result) {
+    public ResponseEntity<?> register(@Valid @RequestBody User userDB, BindingResult result) {
         if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid data");
+            return ResponseEntity.badRequest().body("Invalid data");
         }
 
-        usersService.save(userDB);
+        try {
+            usersService.save(userDB);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("User is exist!");
+        }
 
-        return userDB;
+        return ResponseEntity.ok(userDB);
     }
 
     @PutMapping("/user/{user}/{update}")
