@@ -1,14 +1,16 @@
 package com.websocket.websocket.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "messages", schema = "local")
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column(name = "message_from", updatable = false)
     private String from;

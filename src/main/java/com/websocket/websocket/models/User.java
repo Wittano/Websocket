@@ -10,15 +10,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "local")
 public class User implements Serializable, Model<User>, Cloneable {
 
     @NotNull
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "id", unique = true, nullable = false)
     private long id;
