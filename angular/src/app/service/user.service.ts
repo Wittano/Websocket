@@ -24,12 +24,12 @@ export class UserService {
         password: user.password
       })
     })
-      .then((value: Response) => {
-        if (value.status >= 300) {
-          throw new Error('Invalid login or password');
+      .then(async (response: Response) => {
+        if (response.status >= 300) {
+          throw new Error(await response.text());
         }
 
-        return value.text();
+        return response.text();
       })
       .then(text => {
         localStorage.setItem('token', text);

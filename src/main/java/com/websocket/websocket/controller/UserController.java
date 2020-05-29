@@ -46,7 +46,7 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<?> register(@Valid @RequestBody User userDB, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasFieldErrors("username") && result.hasFieldErrors("password")) {
             return ResponseEntity.badRequest().body("Invalid data");
         }
 

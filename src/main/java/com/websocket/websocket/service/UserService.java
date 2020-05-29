@@ -23,7 +23,7 @@ public class UserService implements UsersService {
     @Override
     public User getUserByName(String name) {
         return repo.findByName(name).orElseThrow(() -> {
-            throw new UsernameNotFoundException(String.format("%s not found", name));
+            throw new UsernameNotFoundException(String.format("%s not found or isn't exist", name));
         });
     }
 
