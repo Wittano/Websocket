@@ -5,6 +5,8 @@ import {JwtToken} from '../models/jwt-token';
 import {Message} from '../models/message';
 import {MessageService} from '../service/message-service.service';
 import {FormControl, Validators} from '@angular/forms';
+import {FriendService} from "../service/friend.service";
+import {ErrorService} from "../service/error.service";
 
 @Component({
   selector: 'app-home-page',
@@ -21,11 +23,14 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
   searchFriend: string;
   searchFriendInput: FormControl;
   disable: boolean;
+  errorMessage: string;
 
   constructor(
     private userService: UserService,
     private messageService: MessageService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private friendService: FriendService,
+    private errorService: ErrorService
   ) {
     const token: string = localStorage.getItem('token');
     const decodeToken: JwtToken = jwtToken<JwtToken>(token);
@@ -39,6 +44,9 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
       Validators.required
     ]);
     this.disable = true;
+    this.errorService.errorMessage.subscribe((value: string) => {
+      this.errorMessage = value;
+    })
   }
 
   ngAfterViewInit() {
@@ -74,16 +82,29 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
   }
 
   setSearchFriend() {
-    this.searchFriend = this.searchFriendInput.value;
     this.disable = !this.searchFriendInput.valid;
   }
 
   addFriend() {
-
+    this.friendService.addFriend(this.username, this.searchFriendInput.value);
+    if (this.errorMessage == null || this.errorMessage == '') {
+      this.friendList.push(this.selectedFriend);
+      this.clearSearchFriendInput();
+    }
   }
 
   removeFriend() {
+    this.friendService.removeFriend(this.username, this.searchFriendInput.value);
+    if (this.errorMessage == null || this.errorMessage == '') {
+      this.friendList = this.friendList.filter((value: string) => value != this.selectedFriend);
+      this.clearSearchFriendInput();
+    }
+  }
 
+  private clearSearchFriendInput() {
+    this.disable = true;
+    this.selectedFriend = '';
+    this.searchFriendInput.setValue('');
   }
 
   private isSessionEnd(token: string | null): boolean {

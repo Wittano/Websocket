@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/user").permitAll()
                 .antMatchers("/user/**").authenticated()
+                .antMatchers("/friend/**").authenticated()
                 .and()
                 .logout().clearAuthentication(true).invalidateHttpSession(true)
                 .and()
