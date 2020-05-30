@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../service/user.service';
 import * as jwtToken from 'jwt-decode';
 import {JwtToken} from '../models/jwt-token';
@@ -14,13 +14,12 @@ import {ErrorService} from "../service/error.service";
   styleUrls: ['./home-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomePageComponent implements AfterViewInit, OnDestroy {
+export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
   username: string;
   messageInput: FormControl;
   selectedFriend: string;
   messageList: Array<Message>;
   friendList: Array<string>;
-  searchFriend: string;
   searchFriendInput: FormControl;
   disable: boolean;
   errorMessage: string;
@@ -36,7 +35,7 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
     const decodeToken: JwtToken = jwtToken<JwtToken>(token);
 
     this.messageList = new Array<Message>();
-    this.friendList = new Array<string>('bob');
+    this.friendList = new Array<string>();
     this.username = decodeToken.sub;
     this.messageInput = new FormControl('');
     this.searchFriendInput = new FormControl('', [
@@ -47,6 +46,17 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
     this.errorService.errorMessage.subscribe((value: string) => {
       this.errorMessage = value;
     })
+  }
+
+  ngOnInit(): void {
+    this.tokenExpired();
+    this.friendService.getFriends(this.username).then(((result: string[]) => {
+      this.friendList = result;
+      this.changeDetection.detectChanges();
+    })).catch(() => {
+      this.friendList.push('bob');
+      this.changeDetection.detectChanges();
+    });
   }
 
   ngAfterViewInit() {
@@ -86,20 +96,25 @@ export class HomePageComponent implements AfterViewInit, OnDestroy {
   }
 
   addFriend() {
+    this.tokenExpired();
     this.friendService.addFriend(this.username, this.searchFriendInput.value);
-    if (this.errorMessage == null || this.errorMessage == '') {
-      this.friendList.push(this.selectedFriend);
+    if (this.errorMessage == '') {
+      this.friendList.push(this.searchFriendInput.value);
+      this.changeDetection.detectChanges();
       this.clearSearchFriendInput();
     }
   }
 
   removeFriend() {
+    this.tokenExpired();
     this.friendService.removeFriend(this.username, this.searchFriendInput.value);
-    if (this.errorMessage == null || this.errorMessage == '') {
-      this.friendList = this.friendList.filter((value: string) => value != this.selectedFriend);
+    if (this.errorMessage == '') {
+      this.friendList = this.friendList.filter((value: string) => value != this.searchFriendInput.value);
+      this.changeDetection.detectChanges();
       this.clearSearchFriendInput();
     }
   }
+
 
   private clearSearchFriendInput() {
     this.disable = true;
