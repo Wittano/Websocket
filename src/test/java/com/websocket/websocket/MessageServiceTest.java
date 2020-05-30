@@ -19,7 +19,7 @@ public class MessageServiceTest {
     private MessageService service;
 
     public MessageServiceTest() {
-        message = new Message("root", "test", "Hi mark", new Date());
+        message = new Message("root", "test", "Hi mark", new Date(), "");
     }
 
     @Test

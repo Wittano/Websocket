@@ -2,11 +2,12 @@ package com.websocket.websocket.controller;
 
 import com.websocket.websocket.interfaces.MessageRepository;
 import com.websocket.websocket.models.Message;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -22,16 +23,22 @@ public class MessageController {
     }
 
     @GetMapping("/news/{from}/{to}")
-    public List<Message> getAllMessage(@PathVariable("from") String from, @PathVariable("to") String to){
+    public List<Message> getAllMessage(@PathVariable("from") String from, @PathVariable("to") String to) {
         return repository.getCorrespondence(from, to);
     }
 
     @PostMapping("/news")
-    public void send(@RequestBody Message message){
+    public void send(@RequestBody Message message) {
         Thread thread = new Thread(() -> repository.save(message));
         thread.setName("SaveMessageInDatabaseThread");
         thread.start();
 
-        template.convertAndSend(String.format("/chat/%s-%s", message.getFrom(), message.getTo()), message);
+        template.convertAndSend(String.format("/chat/%s", message.getQueueName()), message);
+    }
+
+    @MessageMapping("/message")
+    @SendTo("/chat/{queue}")
+    public Message message(@DestinationVariable("queue") String queueName, Message message) {
+        return message;
     }
 }

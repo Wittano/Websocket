@@ -19,11 +19,11 @@ export class MessageService {
     }
   }
 
-  subscribe(from: string, to: string, callback: (message: Message) => void) {
+  subscribe(queue: string, callback: (message: Message) => void) {
     this.disconnect();
     this.stompClient = Client('ws://localhost:8080/message');
     this.stompClient.connect({}, () => {
-      this.stompClient.subscribe(`/chat/${from}-${to}`, (msg: StompMessage) => {
+      this.stompClient.subscribe(`/chat/${queue}`, (msg: StompMessage) => {
         callback(JSON.parse(msg.body));
       });
     });
@@ -36,7 +36,8 @@ export class MessageService {
         from: message.from,
         to: message.to,
         content: message.content,
-        date: new Date()
+        date: new Date(),
+        queueName: message.queueName
       }),
       headers: {
         'Content-Type': 'application/json',

@@ -22,7 +22,9 @@ public class MessageRepo implements MessageRepository {
     @Override
     public List<Message> getCorrespondence(String from, String to) {
         return Optional.of(manager
-                .createQuery("from Message m where m.from = :from and m.to = :to order by m.date asc")
+                .createQuery("from Message m where " +
+                        "(m.from = :from and m.to = :to)" +
+                        " or (m.from = :to and m.to = :from) order by m.date asc")
                 .setParameter("from", from).setParameter("to", to).getResultList()).orElseThrow(() -> {
             throw new NoResultException("Correspondence didn't found");
         });

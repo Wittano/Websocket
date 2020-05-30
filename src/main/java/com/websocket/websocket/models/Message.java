@@ -20,15 +20,18 @@ public class Message {
     private String content;
     @Column(name = "date")
     private Date date = new Date();
+    @Column(name = "queue_name")
+    private String queueName;
 
     public Message() {
     }
 
-    public Message(String from, String to, String content, Date date) {
+    public Message(String from, String to, String content, Date date, String queueName) {
         this.from = from;
         this.to = to;
         this.content = content;
         this.date = date;
+        this.queueName = queueName;
     }
 
     public Date getDate() {
@@ -61,5 +64,13 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getQueueName() {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
     }
 }

@@ -78,7 +78,8 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
       this.username,
       this.selectedFriend,
       this.messageInput.value,
-      new Date()
+      new Date(),
+      this.createQueueName()
     );
 
     this.messageService.sendMessage(message);
@@ -138,12 +139,15 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
 
   private subscribe(): void {
     this.messageService.subscribe(
-      this.username,
-      this.selectedFriend,
+      this.createQueueName(),
       (msg: Message) => {
         this.messageList.push(msg);
         this.changeDetection.detectChanges();
       }
     );
+  }
+
+  private createQueueName(): string {
+    return [this.username, this.selectedFriend].sort().toString().replace(',', '-');
   }
 }
