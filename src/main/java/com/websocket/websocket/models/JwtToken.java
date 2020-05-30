@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtToken implements Serializable {
 
-    public final long expiredTime = 30*60; //This value is expressed in minutes
+    public final long expiredTime = 60*60; //This value is expressed in minutes
 
     @Value("jwt.secert")
     public String secretKey;
