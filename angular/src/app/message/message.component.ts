@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Message } from '../models/message';
+import {Component, Input, OnInit} from '@angular/core';
+import {Message} from '../models/message';
 
 @Component({
   selector: 'app-message',
@@ -8,8 +8,19 @@ import { Message } from '../models/message';
 })
 export class MessageComponent implements OnInit {
   @Input() message: Message;
+  @Input() username: string;
 
-  constructor() {}
+  constructor() {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
+  hideDate(element: HTMLParagraphElement) {
+    element.style.visibility = element.style.visibility == "visible" ? "hidden" : "visible";
+  }
+
+  whoSend(): string {
+    return this.message.from == this.username ? "message" : "message-to";
+  }
 }

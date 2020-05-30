@@ -1,4 +1,4 @@
-<div class="message">
-  <p>{{ message.content }}</p>
-  <p>{{ message.date }}</p>
+<div [className]="whoSend()">
+  <p (click)="hideDate(date)" class="message-content">{{ message.content }}</p>
+  <p #date class="date">{{ message.date.toString().slice(0, 19).replace('T', ' ') }}</p>
 </div>
