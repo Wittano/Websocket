@@ -16,7 +16,7 @@ public class Message {
     private String from;
     @Column(name = "message_to", updatable = false)
     private String to;
-    @Column(name = "content", columnDefinition = "BINARY(16)")
+    @Column(name = "content", columnDefinition = "BINARY(200)")
     private String content;
     @Column(name = "date")
     private Date date = new Date();

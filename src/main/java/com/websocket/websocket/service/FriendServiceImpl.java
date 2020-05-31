@@ -39,9 +39,8 @@ public class FriendServiceImpl implements FriendService {
             user.setFriends(new HashSet<>());
         }
 
-        User copyUser;
         try {
-            copyUser = (User) user.clone();
+            User copyUser = (User) user.clone();
             Set<String> friends = new HashSet<>(copyUser.getFriends());
 
             action.friendAction(friends);

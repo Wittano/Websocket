@@ -8,17 +8,31 @@
     placeholder="Send a message"
     type="text"
   />
-  <button class="button" (click)="sendMessage()" [disabled]="selectedFriend == ''">Send</button>
+  <button
+    class="button"
+    (click)="sendMessage()"
+    [disabled]="selectedFriend == ''"
+  >
+    Send
+  </button>
 </div>
 <div id="friend-menu">
   <div id="friend-search">
     <label>
-      <input (input)="setSearchFriend()" [formControl]="searchFriendInput" placeholder="Search your friend!"
-             type="text">
+      <input
+        (input)="setSearchFriend()"
+        [formControl]="searchFriendInput"
+        placeholder="Search your friend!"
+        type="text"
+      />
     </label>
     <p>{{ errorMessage }}</p>
-    <button (click)="addFriend()" [disabled]="disable" class="button">Add</button>
-    <button (click)="removeFriend()" [disabled]="disable" class="button">Remove</button>
+    <button (click)="addFriend()" [disabled]="disable" class="button">
+      Add
+    </button>
+    <button (click)="removeFriend()" [disabled]="disable" class="button">
+      Remove
+    </button>
   </div>
   <div id="friend-list">
     <p (click)="selectFriend($event)" *ngFor="let friend of friendList">

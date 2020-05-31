@@ -9,6 +9,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @CrossOrigin
@@ -33,6 +35,9 @@ public class MessageController {
         thread.setName("SaveMessageInDatabaseThread");
         thread.start();
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() ->
+                template.convertAndSend(String.format("/chat/%s-notification", message.getTo()), message.getFrom()));
         template.convertAndSend(String.format("/chat/%s", message.getQueueName()), message);
     }
 

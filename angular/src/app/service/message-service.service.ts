@@ -15,16 +15,23 @@ export class MessageService {
         });
       }
     } catch (TypeError) {
-
     }
   }
 
-  subscribe(queue: string, callback: (message: Message) => void) {
+  subscribeOneQueue(queue: string, callback: (message: Message) => void) {
     this.disconnect();
+    this.subscribe(queue, callback);
+  }
+
+  subscribe(queue: string, callback: (message: any) => void) {
     this.stompClient = Client('ws://localhost:8080/message');
     this.stompClient.connect({}, () => {
       this.stompClient.subscribe(`/chat/${queue}`, (msg: StompMessage) => {
-        callback(JSON.parse(msg.body));
+        try {
+          callback(JSON.parse(msg.body));
+        } catch (SyntaxError) {
+          callback(msg.body);
+        }
       });
     });
   }
@@ -41,23 +48,28 @@ export class MessageService {
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     }).catch((err: Error) => {
       console.error(err.message);
     });
   }
 
-  async getCorrespondence(from: string, to: string): Promise<Array<Message>>{
-    const response: Response | void = await fetch(`http://localhost:8080/news/${from}/${to}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+  async getCorrespondence(from: string, to: string): Promise<Array<Message>> {
+    const response: Response | void = await fetch(
+      `http://localhost:8080/news/${from}/${to}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
-    }).catch((err: Error) => {
+    ).catch((err: Error) => {
       console.error(err.message);
     });
-    return response instanceof Response ? <Array<Message>> await response.json() : new Array<Message>();
+    return response instanceof Response
+      ? <Array<Message>>await response.json()
+      : new Array<Message>();
   }
 }
