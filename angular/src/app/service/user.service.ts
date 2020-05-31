@@ -36,8 +36,8 @@ export class UserService {
         this.errorService.changeErrorMessage(null);
         this.router.navigate(['home']);
       })
-      .catch((err: Error) => {
-        this.errorService.changeErrorMessage(err.message);
+      .catch(() => {
+        this.errorService.changeErrorMessage("Incorrect login or password");
       });
   }
 

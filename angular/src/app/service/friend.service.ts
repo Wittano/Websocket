@@ -15,50 +15,51 @@ export class FriendService {
   getFriends(username: string): Promise<string[] | void> {
     const token: string = localStorage.getItem('token');
 
+    this.errorService.changeErrorMessage('');
     return fetch(`${this.apiUrl}/friend/${username}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    }).then(async (response: Response) => {
+    }).then((response: Response) => {
       if (response.status >= 300) {
-        throw new Error(await response.text());
+        throw new Error("User isn't exist");
       }
 
-      this.errorService.changeErrorMessage('');
       return response.json();
     }).catch((err: Error) => {
       this.errorService.changeErrorMessage(err.message);
     });
   }
 
-  addFriend(username: string, friend: string) {
-    this.friendOperation(username, friend, 'POST');
+  async addFriend(username: string, friend: string): Promise<boolean> {
+    return await this.friendOperation(username, friend, 'POST');
   }
 
-  removeFriend(username: string, friend: string) {
-    this.friendOperation(username, friend, 'DELETE');
+  async removeFriend(username: string, friend: string): Promise<boolean> {
+    return await this.friendOperation(username, friend, 'DELETE');
   }
 
-  private friendOperation(username: string, friend: string, httpMethod: string): void {
+  private async friendOperation(username: string, friend: string, httpMethod: string): Promise<boolean> {
     const token: string = localStorage.getItem('token');
 
-    fetch(`${this.apiUrl}/friend/${username}/${friend}`, {
+    return await fetch(`${this.apiUrl}/friend/${username}/${friend}`, {
       method: httpMethod,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    }).then(async (response: Response) => {
+    }).then((response: Response) => {
       if (response.status >= 300) {
-        throw new Error(await response.text());
+        throw new Error(`${friend} isn't exist`);
       }
 
       console.log(httpMethod == 'POST' ? `Added ${friend}` : `Removed ${friend}`);
-      this.errorService.changeErrorMessage('');
-    }).catch((err: Error) => {
-      this.errorService.changeErrorMessage(err.message);
+      return true;
+    }).catch((error: Error) => {
+      this.errorService.changeErrorMessage(error.message);
+      return false;
     });
   }
 }

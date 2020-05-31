@@ -1,19 +1,12 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { UserService } from '../service/user.service';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {UserService} from '../service/user.service';
 import * as jwtToken from 'jwt-decode';
-import { JwtToken } from '../models/jwt-token';
-import { Message } from '../models/message';
-import { MessageService } from '../service/message-service.service';
-import { FormControl, Validators } from '@angular/forms';
-import { FriendService } from '../service/friend.service';
-import { ErrorService } from '../service/error.service';
+import {JwtToken} from '../models/jwt-token';
+import {Message} from '../models/message';
+import {MessageService} from '../service/message-service.service';
+import {FormControl, Validators} from '@angular/forms';
+import {FriendService} from '../service/friend.service';
+import {ErrorService} from '../service/error.service';
 
 @Component({
   selector: 'app-home-page',
@@ -73,6 +66,7 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
         this.friendList.push('bob');
         this.changeDetection.detectChanges();
       });
+    this.errorService.changeErrorMessage('');
   }
 
   ngAfterViewInit() {
@@ -126,19 +120,18 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
     this.disable = !this.searchFriendInput.valid;
   }
 
-  addFriend() {
+  async addFriend() {
     this.tokenExpired();
-    this.friendService.addFriend(this.username, this.searchFriendInput.value);
-    if (this.errorMessage === '') {
+    if (await this.friendService.addFriend(this.username, this.searchFriendInput.value)){
       this.friendList.push(this.searchFriendInput.value);
-      this.changeDetection.detectChanges();
-      this.clearSearchFriendInput();
     }
+    this.clearSearchFriendInput();
+    this.changeDetection.detectChanges();
   }
 
-  removeFriend() {
+  async removeFriend() {
     this.tokenExpired();
-    this.friendService.removeFriend(
+    await this.friendService.removeFriend(
       this.username,
       this.searchFriendInput.value
     );
@@ -146,9 +139,9 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
       this.friendList = this.friendList.filter(
         (value: string) => value !== this.searchFriendInput.value
       );
-      this.changeDetection.detectChanges();
-      this.clearSearchFriendInput();
     }
+    this.changeDetection.detectChanges();
+    this.clearSearchFriendInput();
   }
 
   private clearSearchFriendInput() {
