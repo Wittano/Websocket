@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class MysqlConfig extends MySQL5Dialect {
     @Override
     public String getTableTypeString() {
-        return "ENGINE=InnoDB DEFAULT CHARSET=utf8_polish_ci";
+        return "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
     }
+
 }
