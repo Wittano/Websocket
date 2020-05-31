@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @SpringBootTest

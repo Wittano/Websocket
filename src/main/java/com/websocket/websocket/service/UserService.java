@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 public class UserService implements UsersService {
 
@@ -18,6 +16,11 @@ public class UserService implements UsersService {
     public UserService(PasswordEncoder passwordEncoder, UserRepository<User> repo) {
         this.passwordEncoder = passwordEncoder;
         this.repo = repo;
+    }
+
+    @Override
+    public boolean isExist(String name) {
+        return repo.findByName(name).isPresent();
     }
 
     @Override

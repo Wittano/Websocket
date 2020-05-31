@@ -3,11 +3,9 @@ package com.websocket.websocket.controller;
 import com.websocket.websocket.interfaces.service.FriendService;
 import com.websocket.websocket.interfaces.service.UsersService;
 import com.websocket.websocket.models.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Set;
@@ -35,25 +33,32 @@ public class UserController {
     }
 
     @PostMapping("/friend/{who}/{friend}")
-    public void addFriend(@PathVariable("friend") String friend, @PathVariable("who") String name)
+    public ResponseEntity<String> addFriend(@PathVariable("friend") String friend, @PathVariable("who") String name)
             throws CloneNotSupportedException {
         if (name.equals(friend)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            return ResponseEntity.badRequest().body(
                     "Username and friend who want to add, can't be same person");
+        } else if (!usersService.isExist(friend)) {
+            return ResponseEntity.badRequest().body(
+                    String.format("%s isn't exist", friend));
         }
 
+
         friendService.addFriend(name, friend);
+
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("/friend/{who}/{friend}")
-    public void deleteFriend(@PathVariable("friend") String friend, @PathVariable("who") String name)
+    public ResponseEntity<String> deleteFriend(@PathVariable("friend") String friend, @PathVariable("who") String name)
             throws CloneNotSupportedException {
         if (name.equals(friend)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            return ResponseEntity.badRequest().body(
                     "Username and friend name want to add, can't be same person");
         }
 
         friendService.deleteFriend(name, friend);
+        return ResponseEntity.ok("");
     }
 
     @PostMapping("/user")

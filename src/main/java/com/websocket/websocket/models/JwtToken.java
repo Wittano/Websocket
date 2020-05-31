@@ -8,18 +8,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
 public class JwtToken implements Serializable {
 
-    public final long expiredTime = 60*60; //This value is expressed in minutes
+    public final long expiredTime = 60 * 60; //This value is expressed in seconds
 
     @Value("jwt.secert")
     public String secretKey;
 
-    public String getUsername(String token){
+    public String getUsername(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
@@ -32,7 +34,7 @@ public class JwtToken implements Serializable {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
-    public boolean isExpired(String token){
+    public boolean isExpired(String token) {
         final Date expired = getExpiredDate(token);
         return expired.before(new Date());
     }
@@ -41,7 +43,7 @@ public class JwtToken implements Serializable {
         return getClaim(token, Claims::getExpiration);
     }
 
-    public String createToken(UserDetails user){
+    public String createToken(UserDetails user) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder().setClaims(claims).setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -49,7 +51,7 @@ public class JwtToken implements Serializable {
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 
-    public boolean validToken(String token, UserDetails user){
+    public boolean validToken(String token, UserDetails user) {
         final String username = getUsername(token);
         return username.equals(user.getUsername()) && !isExpired(token);
     }
