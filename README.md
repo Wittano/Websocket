@@ -10,7 +10,7 @@ You need following programs:
 
 After instalation run run_linux.sh
 ## Run app for Windows
-1. Run your Java IDE(IntelliJ IDEA or NetBeans) and pack all project to .jar archive
+1. Run your Java IDE(IntelliJ IDEA or NetBeans) and package project to .jar archive
 2. Install [Nodejs](https://nodejs.org/en/)
 3. Run this command inside angular directory:
     ```
