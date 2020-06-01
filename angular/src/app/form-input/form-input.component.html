@@ -1,0 +1,9 @@
+<label for="input">{{ name }}: </label>
+<input class="input" [type]="type" [placeholder]="placeholder" [formControl]='input' (input)='valid()'>
+<div *ngIf='input.invalid' class="error-msg">
+    <p *ngIf="input.errors.minlength">{{ name }} is too short</p>
+    <p *ngIf="input.errors.maxlength">{{ name }} is too long</p>
+    <p *ngIf="!input.errors.minlength && (input.errors.pattern && !validEmail)">
+        {{ name }} isn't correct
+    </p>
+</div>

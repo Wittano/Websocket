@@ -1,0 +1,65 @@
+<a routerLink="/">Login</a>
+<div id="form">
+  <app-form-input
+    (inputValue)="getName($event)"
+    (validResult)="nameValid($event)"
+    [max]="30"
+    [min]="4"
+    [name]="'Username'"
+    [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,30}'"
+    [placeholder]="'Username'"
+    [type]="'name'"
+  >
+  </app-form-input>
+  <app-form-input
+    (inputValue)="getPassword($event)"
+    (validResult)="passwordValid($event)"
+    [max]="60"
+    [min]="4"
+    [name]="'Password'"
+    [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,60}'"
+    [placeholder]="'Password'"
+    [type]="'password'"
+  ></app-form-input>
+  <app-form-input
+    (inputValue)="getEmail($event)"
+    (validResult)="emailValid($event)"
+    [max]="200"
+    [min]="4"
+    [name]="'Email'"
+    [pattern]="regex"
+    [placeholder]="'Email'"
+    [type]="'email'"
+  ></app-form-input>
+  <div [formGroup]="genderInputs" id="gender">
+    <label for="female">Female</label>
+    <input
+      (input)="choiceGender('female')"
+      class="checkbox"
+      formControlName="female"
+      id="female"
+      type="checkbox"
+    />
+    <label for="male">Male</label>
+    <input
+      (input)="choiceGender('male')"
+      class="checkbox"
+      formControlName="male"
+      id="male"
+      type="checkbox"
+    />
+  </div>
+  <div id="date">
+    <label for="brithday">Birthday: </label>
+    <input id="brithday" type="date"/>
+  </div>
+  <button
+    (click)="register()"
+    [disabled]="!(nameCorrect && passwordCorrect && emailCorrect)"
+  >
+    Register
+  </button>
+  <div *ngIf="errorMsg != ''">
+    <p class="error-msg">{{ errorMsg }}</p>
+  </div>
+</div>

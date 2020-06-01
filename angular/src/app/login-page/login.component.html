@@ -1,0 +1,34 @@
+<a routerLink="/register">Register</a>
+<br />
+<app-form-input
+  [type]="'name'"
+  [placeholder]="'Username'"
+  [name]="'Username'"
+  [max]="30"
+  [min]="4"
+  [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,60}'"
+  (validResult)="nameValid($event)"
+  (inputValue)="getUsername($event)"
+>
+</app-form-input>
+<app-form-input
+  [type]="'password'"
+  [placeholder]="'Password'"
+  [name]="'Password'"
+  [max]="60"
+  [min]="4"
+  [pattern]="'[A-Za-z0-9!#$&*:;.,]{4,60}'"
+  (validResult)="passwordValid($event)"
+  (inputValue)="getPassword($event)"
+>
+</app-form-input>
+<div *ngIf="errorMessage != ''">
+  <p>{{ errorMessage }}</p>
+</div>
+<button
+  (click)="login()"
+  class="button"
+  [disabled]="!(passwordCorrect && nameCorrect)"
+>
+  Login in
+</button>
