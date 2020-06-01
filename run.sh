@@ -1,12 +1,31 @@
 #!/bin/bash
 
-if [ -z $(which mvn) ]
-then
-	echo "Install maven"
-	sudo apt install maven
-fi
+os_name=$(cat /etc/os-release | grep ID | sed 's/ID=//g' | head -n 1)
+package_manager="apt"
+installation_command="install"
 
-if [ -z $(ls target/websocket-0.2.jar) ]
+function install_maven(){
+	echo "Install maven"
+	sudo $package_manager $installation_command maven
+}
+
+function install_node(){
+		echo "Angular: Install Nodejs"
+
+		if [ $os_name = "ubuntu" ] 
+		then
+			curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+			sudo apt-get install -y nodejs
+		else
+			echo "Install nodejs manually!"
+			exit
+		fi
+}
+
+mvn -v || install_maven
+node -v || install_node
+
+if [ ! -f target/websocket-0.2.jar ]
 then
 	echo "Packing Java Project to .jar file"
 	mvn package -DskipTests
@@ -14,12 +33,6 @@ fi
 
 if [ ! -d angular/node_modules ]
 then
-	if [ -z $(which node) ]
-	then
-		echo "Angular: Install Nodejs"
-		curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-		sudo apt-get install -y nodejs
-	fi
 	cd angular
 	echo "Angular: Install unnecessary packages"
 	npm install
