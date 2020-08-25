@@ -66,8 +66,8 @@ public class UserRepo implements UserRepository<User> {
     @Override
     @Transactional
     public void update(User target, User update) {
-        if(target.equals(update)){
-           return;
+        if (target.equals(update)) {
+            return;
         }
         target.merge(update);
         entityManager.merge(target);

@@ -18,8 +18,8 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private UserDetailsService service;
-    private JwtToken jwtToken;
+    private final UserDetailsService service;
+    private final JwtToken jwtToken;
 
     public JwtFilter(@Qualifier("userDetailService") UserDetailsService service, JwtToken jwtToken) {
         this.service = service;
@@ -36,15 +36,15 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = null;
         String token = null;
 
-        if(requestToken != null && requestToken.startsWith("Bearer ")){
+        if (requestToken != null && requestToken.startsWith("Bearer ")) {
             token = requestToken.substring(7);
             username = jwtToken.getUsername(token);
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = service.loadUserByUsername(username);
 
-            if(jwtToken.validToken(token, userDetails)){
+            if (jwtToken.validToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null,
                                 userDetails.getAuthorities());

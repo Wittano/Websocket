@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MessageRepository {
     List<Message> getCorrespondence(String from, String to);
+
     void save(Message message);
 }

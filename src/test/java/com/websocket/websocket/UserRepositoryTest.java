@@ -31,14 +31,13 @@ public class UserRepositoryTest {
     }
 
     @BeforeEach
-    public void removeTestUser(){
-        try{
+    public void removeTestUser() {
+        try {
             repository.deleteByName("Bob the Builder");
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
-        try{
-            repository.deleteByName(testUserDB.getUsername());
-        } catch (Exception ignored){
+        if (!repository.isExistByName(testUserDB.getUsername())) {
+            repository.save(testUserDB);
         }
     }
 
@@ -57,9 +56,7 @@ public class UserRepositoryTest {
 
     @Test
     public void search_user_only_used_him_nickname() {
-        User userDB = new User();
-        userDB.setUsername("root");
-        Assertions.assertTrue(repository.isExistByName(userDB.getUsername()));
+        Assertions.assertTrue(repository.isExistByName(testUserDB.getUsername()));
     }
 
     @Test
@@ -78,9 +75,9 @@ public class UserRepositoryTest {
         }
 
         Set<User> userDBS = repository.findAll();
-        try{
+        try {
             repository.save(testUserDB);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.getStackTrace();
             return;
         }

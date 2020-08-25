@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MessageService {
     void addMessage(Message message);
+
     List<Message> getCorrespondence(String from, String to);
 }

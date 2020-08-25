@@ -42,6 +42,8 @@ public class MessageServiceTest {
 
     @Test
     void getMessageSpecifUser() {
+        service.addMessage(message);
+
         List<Message> messages = service.getCorrespondence(message.getFrom(), message.getTo());
 
         Assertions.assertNotEquals(messages.size(), 0);
