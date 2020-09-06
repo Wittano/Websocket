@@ -88,3 +88,4 @@ Thumbs.db
 # Angualr
 dist
 node
+/src/main/resources/application-dev.properties
