@@ -6,5 +6,5 @@ Before run application, you change jdbc url, username and password in applicatio
 Otherwise, application doesn't run
 
 ```sh
-./mvnw package
+./mvnw package && sudo docker-compose up
 ```
