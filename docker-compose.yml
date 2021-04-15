@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   database:
     container_name: database
@@ -7,24 +7,24 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123
-      - MYSQL_USER=wittano
+      - MYSQL_USER=admin
       - MYSQL_PASSWORD=123
-      - MYSQL_DATABASE=local
+      - MYSQL_DATABASE=docker
     networks:
-      - network
+      - backend
   web:
-    build: .
+    build:
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - database
     networks:
-      - network
+      - backend
     environment:
-      - "SPRING_PROFILES_ACTIVE=prod"
       - "SPRING_DATASOURCE_PASSWORD=123"
       - "SPRING_DATASOURCE_USERNAME=wittano"
-      - "SPRING_DATASOURCE_URL=jdbc:mysql://database/local?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useUnicode=true&characterSetResults=utf8"
+      - "SPRING_DATASOURCE_URL=jdbc:mysql://database/docker"
       - "SPRING_JAP_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect"
 networks:
-  network: { }
+  backend:
