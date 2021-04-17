@@ -1,9 +1,12 @@
-package com.wittano.websocket;
+package com.wittano.websocket.service;
 
 import com.wittano.websocket.models.entity.User;
 import com.wittano.websocket.repository.UserRepository;
 import com.wittano.websocket.service.controller.FriendService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,11 +44,6 @@ public class FriendServiceTest {
     void init() {
         repository.saveAll(Arrays.asList(TEST_USER, TEST_USER_2));
         friendService.add(TEST_FRIEND_REQUEST);
-    }
-
-    @AfterEach
-    void clear() {
-        repository.deleteAll();
     }
 
     @Test

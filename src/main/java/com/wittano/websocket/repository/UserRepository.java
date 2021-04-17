@@ -1,7 +1,6 @@
 package com.wittano.websocket.repository;
 
 import com.wittano.websocket.models.entity.User;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

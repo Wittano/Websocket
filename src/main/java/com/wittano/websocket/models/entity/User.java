@@ -1,6 +1,7 @@
 package com.wittano.websocket.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.wittano.websocket.models.enums.Gender;
 import com.wittano.websocket.models.views.DefaultView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +45,4 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     @JsonView(DefaultView.External.class)
     private Set<User> friends;
-
-    public enum Gender {
-        Male, Female
-    }
 }

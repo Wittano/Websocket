@@ -1,6 +1,7 @@
 package com.wittano.websocket.controller;
 
 import com.wittano.websocket.models.entity.User;
+import com.wittano.websocket.models.request.UserRequest;
 import com.wittano.websocket.service.controller.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class UserController {
 
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@Valid @RequestBody User user, BindingResult result) {
-        if (result.hasFieldErrors("username") || result.hasFieldErrors("password")) {
+    public User register(@Valid @RequestBody UserRequest user, BindingResult result) {
+        if (result.hasErrors()) {
             throw new ValidationException("Invalid data");
         }
 

@@ -1,4 +1,4 @@
-package com.wittano.websocket;
+package com.wittano.websocket.service;
 
 import com.wittano.websocket.models.entity.Message;
 import com.wittano.websocket.repository.MessageRepository;

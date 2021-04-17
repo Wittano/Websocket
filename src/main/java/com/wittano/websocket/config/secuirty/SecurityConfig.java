@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(3)
+@Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService service;
     private final JwtFilter filter;

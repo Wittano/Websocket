@@ -27,7 +27,7 @@ public class AuthService {
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
-                        user.getPassword(),
+                        request.getPassword(),
                         Collections.singleton(new SimpleGrantedAuthority("USER"))));
 
         return jwtToken.createToken(user.getUsername());

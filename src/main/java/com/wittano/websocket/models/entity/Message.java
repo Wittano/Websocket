@@ -17,9 +17,9 @@ import java.util.Date;
 public class Message {
     @Id
     private long id;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User from;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User to;
     private String content;
     private Date date = new Date();
