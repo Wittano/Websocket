@@ -1,5 +1,5 @@
-# Websocket
-Spring boot app which use websocket, MySQL database and Angular
+# chat
+Spring boot app which use chat, MySQL database and Angular
 
 # Run
 ```sh
