@@ -10,6 +10,9 @@ dev = "python chat/manage.py runserver"
 django = "*"
 django-rest-framework = "*"
 djangorestframework-simplejwt = "*"
+uvicorn = "*"
+websockets = "*"
+channels = "*"
 
 [dev-packages]
 pylint = "*"

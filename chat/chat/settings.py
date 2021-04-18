@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'apps.user'
+    'channels',
+    # Apps
+    'apps.user',
+    'apps.websocket'
 ]
 
 REST_FRAMEWORK = {
@@ -76,6 +79,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'chat.wsgi.application'
+
+ASGI_APPLICATION = 'chat.asgi.application'
 
 
 # Database
