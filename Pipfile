@@ -13,6 +13,7 @@ djangorestframework-simplejwt = "*"
 uvicorn = "*"
 websockets = "*"
 channels = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pylint = "*"

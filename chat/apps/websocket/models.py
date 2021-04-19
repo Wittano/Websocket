@@ -10,4 +10,4 @@ class Message(models.Model):
         get_user_model(), on_delete=models.DO_NOTHING, related_name='sender')
     receiver = models.ForeignKey(
         get_user_model(), on_delete=models.DO_NOTHING, related_name='receiver')
-    data = models.DateField(default=now())
+    data = models.DateField(default=now)

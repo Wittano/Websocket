@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         return self._validate(
             value,
             'password',
-            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
+            r'^([\w!@#$%\^&\*\(\)]{8,300})$'
         )
 
     class Meta:
