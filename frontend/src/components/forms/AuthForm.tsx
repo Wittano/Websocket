@@ -56,7 +56,7 @@ export const AuthForm = (props: AuthFormProps) => {
     });
   };
 
-  const click = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const click = () => {
     props.onClick({
       username: username,
       password: password,
@@ -70,14 +70,23 @@ export const AuthForm = (props: AuthFormProps) => {
         type="text"
         placeholder="username"
         onChange={usernameValidator}
-        error={error}
+        error={
+          props.error.fields.login === "" ? error : props.error.fields.login
+        }
       />
       <GeneralInput
         type="password"
         placeholder="password"
         onChange={passwordValidator}
-        error={error}
+        error={
+          props.error.fields.password === ""
+            ? error
+            : props.error.fields.password
+        }
       />
+      <span>
+        {props.name === "Login" ? props.error.login : props.error.register}
+      </span>
       <button onClick={click} disabled={!(isUsernameValid && isPasswordValid)}>
         {props.name}
       </button>

@@ -29,6 +29,6 @@ class TokenAuthMiddleware():
             return None
         else:
             decode = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            scope['user'] = sync_to_async(get_user_model().objects.get)(id=decode['user_id'])
+            scope['user'] = await sync_to_async(get_user_model().objects.get)(id=decode['user_id'])
 
         return await self.apps(scope, receive, send)
