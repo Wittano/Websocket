@@ -2,16 +2,19 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework.generics import ListAPIView
 from apps.message.models import Message
+from rest_framework.permissions import IsAuthenticated
 from .serializers import MessageSerializer
 
 
 class MessageListView(ListAPIView):
     serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
     queryset = Message.objects.filter(receiver=None)
 
 
 class PrivateMessageListView(ListAPIView):
     serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user

@@ -1,7 +1,7 @@
 export interface Message {
     id: number;
     sender: number;
-    receiver?: any;
+    receiver?: number;
     message: string;
     date: Date;
 }

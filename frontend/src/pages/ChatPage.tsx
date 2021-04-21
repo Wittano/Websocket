@@ -1,56 +1,64 @@
-import Cookies from "js-cookie";
-import React, { useEffect, useReducer, useState } from "react";
-import Message from "../interfaces/Message";
+import React, { useEffect, useState } from "react";
+import { Chat } from "../components/forms/Chat";
+import { User as UserComponent } from "../components/forms/User";
+import User from "../interfaces/response/User";
 import { authClient } from "../utils/HttpClient";
+import { refresh } from "../utils/Refresh";
+import { createURL } from "../utils/Socket";
 
 export const ChatPage = () => {
-  const [msg, setMsg] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const prefix = window.location.protocol.startsWith("https") ? "wss" : "ws";
-  const host =
-    process.env.NODE_ENV === "development"
-      ? "localhost:8000"
-      : window.location.host;
-  const socket = new WebSocket(
-    `${prefix}://${host}/chat?token=${Cookies.get("access")}`
-  );
-
-  socket.onmessage = (e) => {
-    setMessages([...messages, JSON.parse(e.data)]);
-  };
+  const [users, setUsers] = useState<Array<User>>([]);
+  const [usersFiltered, setUsersFiltred] = useState<Array<User>>([]);
+  const socket = new WebSocket(createURL());
 
   useEffect(() => {
-    const getMessages = async () => {
-      setMessages(await authClient.get("/message/").then((res) => res.data));
+    const getUsers = async () => {
+      setUsers(
+        await authClient
+          .get("/user/list")
+          .then((res) => res.data)
+          .catch(refresh)
+      );
     };
-    getMessages();
+
+    authClient
+      .get("/user/username")
+      .then((res) => res.data[0].username)
+      .then((username) => localStorage.setItem("username", username));
+
+    getUsers();
   }, []);
 
-  const send = () => {
-    socket.send(msg);
-    setMsg("");
-  };
+  const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newList = users.filter((element) =>
+      element.username.startsWith(e.target.value)
+    );
 
-  const getMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMsg(e.target.value);
+    setUsersFiltred(newList);
+  };
+  /**
+   * List of available people, which user can talk to others
+   */
+  const friends = () => {
+    if (usersFiltered.length > 0) {
+      return usersFiltered.map((e) => <UserComponent username={e.username} />);
+    } else {
+      return users.map((e) => <UserComponent username={e.username} />);
+    }
   };
 
   return (
-    <div>
-      <h1>Chat</h1>
+    <div className="flex justify-between">
+      <Chat socket={socket} />
       <div>
-        {messages.map((e, i) => (
-          <p key={i}>{e.message}</p>
-        ))}
-      </div>
-      <div>
-        <input
-          onChange={getMessage}
-          type="text"
-          placeholder="Send message"
-          value={msg}
-        />
-        <button onClick={send}>Send</button>
+        {friends()}
+        <div>
+          <input
+            onChange={searchFriend}
+            type="text"
+            placeholder="Search friend"
+          />
+        </div>
       </div>
     </div>
   );

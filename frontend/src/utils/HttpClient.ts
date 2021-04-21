@@ -6,13 +6,19 @@ const url =
     ? "http://localhost:8000"
     : window.location.origin;
 
+/**
+ * Base http client for API
+ */
 export const client = axios.create({
   baseURL: `${url}/api`,
 });
 
+/**
+ * Base http client for authorizted API
+ */
 export const authClient = axios.create({
   baseURL: `${url}/api`,
   headers: {
-    Authorization: Cookies.get("token"),
+    Authorization: `Bearer ${Cookies.get("access")}`,
   },
 });

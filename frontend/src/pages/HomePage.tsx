@@ -4,7 +4,7 @@ import { AuthForm } from "../components/forms/AuthForm";
 import AuthError from "../interfaces/form/AuthError";
 import TokenReposen from "../interfaces/response/TokenReposne";
 import UserData from "../interfaces/UserData";
-import { client } from "../utils/HttpClient";
+import { authClient, client } from "../utils/HttpClient";
 import { redirect } from "../utils/Redirect";
 
 export const HomePage = () => {
@@ -13,7 +13,6 @@ export const HomePage = () => {
   }
 
   const [message, setMessage] = useState<string>("");
-
   const [error, setError] = useState<AuthError>({
     login: "",
     register: "",
@@ -61,9 +60,15 @@ export const HomePage = () => {
         date.setHours(date.getHours() + 23);
 
         Cookies.set("refresh", tokens.refresh, {
-          expires: date.getDate(),
+          expires: date,
           secure: isHttps,
         });
+
+        authClient
+          .get("/user/username")
+          .then((res) =>
+            localStorage.setItem("username", res.data[0].username)
+          );
 
         redirect("/chat");
       })
