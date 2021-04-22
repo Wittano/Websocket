@@ -64,11 +64,10 @@ export const HomePage = () => {
           secure: isHttps,
         });
 
-        authClient
-          .get("/user/username")
-          .then((res) =>
-            localStorage.setItem("username", res.data[0].username)
-          );
+        authClient.get("/user/username").then((res) => {
+          localStorage.setItem("username", res.data[0].username);
+          localStorage.setItem("id", res.data[0].id);
+        });
 
         redirect("/chat");
       })
@@ -86,10 +85,16 @@ export const HomePage = () => {
 
   return (
     <div>
-      <h1>Hello Chat</h1>
-      <AuthForm name="Register" onClick={register} error={error} />
-      <p>{message}</p>
-      <AuthForm name="Login" onClick={login} error={error} />
+      <h1 className="text-3xl text-center mt-3">Chat</h1>
+      <div className="flex justify-between justify-items-center m-10">
+        <AuthForm
+          name="Register"
+          onClick={register}
+          error={error}
+          message={message}
+        />
+        <AuthForm name="Login" onClick={login} error={error} />
+      </div>
     </div>
   );
 };

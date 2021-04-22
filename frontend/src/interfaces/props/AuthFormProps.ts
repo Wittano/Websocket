@@ -5,4 +5,5 @@ export default interface AuthFormProps {
   name: string;
   onClick: (user: UserData) => void;
   error: AuthError;
+  message?: string;
 }

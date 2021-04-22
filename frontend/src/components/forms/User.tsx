@@ -7,9 +7,8 @@ export const User = (props: UserProps) => {
   };
 
   return (
-    <div>
-      <p>{props.username}</p>
-      <button onClick={chat}>Chat</button>
+    <div className="flex justify-between my-2 duration-500 hover:bg-white hover:text-black hover:cursor-pointer p-2" onClick={chat}>
+      <p className="w-full text-lg text-center">{props.username}</p>
     </div>
   );
 };

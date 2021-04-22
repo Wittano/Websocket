@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Chat } from "../components/forms/Chat";
 import { User as UserComponent } from "../components/forms/User";
+import { Header } from "../components/Header";
 import User from "../interfaces/response/User";
 import { authClient } from "../utils/HttpClient";
 import { refresh } from "../utils/Refresh";
@@ -23,8 +24,11 @@ export const ChatPage = () => {
 
     authClient
       .get("/user/username")
-      .then((res) => res.data[0].username)
-      .then((username) => localStorage.setItem("username", username));
+      .then((res) => res.data[0])
+      .then((data) => {
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("id", data.id);
+      });
 
     getUsers();
   }, []);
@@ -48,17 +52,22 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="flex justify-between">
-      <Chat socket={socket} />
-      <div>
-        {friends()}
-        <div>
-          <input
-            onChange={searchFriend}
-            type="text"
-            placeholder="Search friend"
-          />
+    <div>
+      <Header name={localStorage.getItem("username")!!} />
+      <div className="flex justify-between">
+        <div className="bg-blue-500 text-white">
+          <h2 className="text-2xl text-center">Users</h2>
+          <div className="overflow-y-auto h-screen">{friends()}</div>
+          <div className="sticky bottom-0">
+            <input
+              className="text-center text-lg text-black"
+              onChange={searchFriend}
+              type="text"
+              placeholder="Search friend"
+            />
+          </div>
         </div>
+        <Chat socket={socket} />
       </div>
     </div>
   );
