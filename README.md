@@ -1,7 +1,4 @@
-# chat
-Spring boot app which use chat, MySQL database and Angular
-
-# Run
-```sh
-./mvnw package && sudo docker-compose up
-```
+# Chat
+Simple application to communcation between people
+# Why
+I want to try to learn websocket and Django
