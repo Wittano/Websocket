@@ -1,0 +1,48 @@
+version: "3.3"
+
+services:
+  web:
+    container_name: chat-react
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - django
+    ports:
+      - 3000:3000
+    networks:
+      - frontend
+    volumes:
+      - ./frontend/src:/app/src
+  django:
+    container_name: chat-django
+    ports:
+      - 8000:8000
+    volumes:
+      - ./chat:/app
+    build:
+      context: chat/
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - redis
+    networks:
+      - frontend
+      - backend
+  db:
+    container_name: chat-postgres
+    image: postgres
+    environment:
+      - POSTGRES_DB=docker
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - backend
+  redis:
+    image: redis:latest
+    container_name: chat-redis
+    networks: 
+      - backend
+networks:
+  backend: {}
+  frontend: {}

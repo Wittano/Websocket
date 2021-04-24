@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-c*)qb!7!u9xo6u9oty9j-_yhzid+&9skcto5lh$pzw+)^6*5m!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -60,7 +60,10 @@ SIMPLE_JWT = {
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
     }
 }
 
@@ -106,8 +109,12 @@ ASGI_APPLICATION = 'chat.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'docker',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
