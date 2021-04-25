@@ -39,13 +39,17 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self._sender = self.scope['url_route']['kwargs']['from']
         self._receiver = self.scope['url_route']['kwargs']['to']
-        self._group = f'chat-{self._sender}-{self._receiver}'
+        self._groups = [f'chat-{self._sender}-{self._receiver}',
+                        f'chat-{self._receiver}-{self._sender}']
 
-        await self.channel_layer.group_add(self._group, self.channel_name)
+        for group in self._groups:
+            await self.channel_layer.group_add(group, self.channel_name)
+
         await self.accept()
 
     async def disconnect(self, close_code: int):
-        await self.channel_layer.group_discard(self._group, self.channel_name)
+        for group in self._groups:
+            await self.channel_layer.group_discard(group, self.channel_name)
 
     async def receive(self, text_data: str):
         message = Message(message=text_data, sender=await self._get_user(
@@ -53,10 +57,11 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
 
         await sync_to_async(message.save)()
 
-        await self.channel_layer.group_send(self._group, {
-            'type': 'send_message',
-            'message': MessageSerializer(message).data
-        })
+        for group in self._groups:
+            await self.channel_layer.group_send(group, {
+                'type': 'send_message',
+                'message': MessageSerializer(message).data
+            })
 
     async def send_message(self, event):
         await self.send(json.dumps(event['message']))
