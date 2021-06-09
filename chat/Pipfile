@@ -7,7 +7,7 @@ name = "pypi"
 dev = "python manage.py runserver"
 
 [packages]
-django = "*"
+django = ">=3.2.1"
 django-rest-framework = "*"
 djangorestframework-simplejwt = "*"
 uvicorn = "*"
